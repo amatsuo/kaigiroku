@@ -20,6 +20,8 @@
 #'  option.
 #' @param year integer, year
 #' @param meetingName name of the meeting in Japanese. example "予算委員会", "本会議"
+#' @param searchTerms search terms. either vector of search terms or a string of
+#' search terms separated by a space (e.g. "農家 補償")
 #' @param ...
 #'
 #' @return the function returns a data.frame of speeches.
@@ -31,6 +33,7 @@
 get_meeting <- function(house = "Lower", sessionNumber = NA,
                         startDate = NA, endDate = NA, year = NA,
                         meetingName = NA,
+                        searchTerms = NA,
                         ... ) {
   if(! (house %in% c("Upper", "Lower", "Both"))) {
     stop("house parameter has to be one of c(\"Upper\", \"Lower\", \"Both\")")
@@ -70,14 +73,29 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
   }
   searchCondition <- sprintf("nameOfHouse=%s&nameOfMeeting=%s&from=%s&until=%s",
                              houseName, meetingName, startDate, endDate)
+  speechdf <- api_access_function(api_function = "meeting",
+                                  searchCondition = searchCondition,
+                                  searchTerms = searchTerms)
+  return(speechdf)
+}
+
+api_access_function <- function(api_function,  searchCondition, searchTerms = NA){
+  if(!is.na(searchTerms)){
+    searchTerms <- unlist(strsplit(searchTerms, "\\s+"))
+    searchCondition <- paste(searchCondition, sprintf("any=%s", searchTerms),
+                             sep = "&")
+  }
   searchConditionEnc <- URLencode(searchCondition, reserved = TRUE)
-  baseUrlMeeting <- "http://kokkai.ndl.go.jp/api/1.0/meeting"
-  # return(searchCondition)
-  url <- paste(baseUrlMeeting, searchConditionEnc, sep = "?")
+  if(api_function == "meeting"){
+    baseUrl <- "http://kokkai.ndl.go.jp/api/1.0/meeting"
+  } else {
+    baseUrl <- "http://kokkai.ndl.go.jp/api/1.0/speech"
+  }
+  url <- paste(baseUrl, searchConditionEnc, sep = "?")
   xml_out <- xmlParse(url, isURL = TRUE)
 
   # stop if no record found
-  saveXML(xmlRoot(xml_out), file = 'R/test_scripts/xml_dump.txt')
+  # saveXML(xmlRoot(xml_out), file = 'R/test_scripts/xml_dump.txt')
   #browser()
   numberOfRecords <- getNodeSet(xml_out, "//numberOfRecords")[[1]] %>%
     xmlValue() %>% as.numeric(.)
@@ -99,7 +117,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
       searchConditionCont <- sprintf("%s&startRecord=%s", searchCondition,
                                      nextRecordPosition)
       searchConditionEnc <- URLencode(searchConditionCont, reserved = TRUE)
-      url <- paste(baseUrlMeeting, searchConditionEnc, sep = "?")
+      url <- paste(baseUrl, searchConditionEnc, sep = "?")
       xml_out <- xmlParse(url, isURL = TRUE)
       speechdf <- rbind(speechdf, xml_to_speechdf(xml_out))
       if(length(getNodeSet(xml_out, "//nextRecordPosition")) == 0) {
@@ -109,5 +127,5 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
     }
   }
   return(speechdf)
-}
 
+}

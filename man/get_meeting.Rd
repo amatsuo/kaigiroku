@@ -5,7 +5,7 @@
 \title{Get speeches by meeting}
 \usage{
 get_meeting(house = "Lower", sessionNumber = NA, startDate = NA,
-  endDate = NA, year = NA, meetingName = NA, ...)
+  endDate = NA, year = NA, meetingName = NA, searchTerms = NA, ...)
 }
 \arguments{
 \item{house}{Name of the house, value is "Upper", "Lower", or "Both"}
@@ -23,6 +23,9 @@ option.}
 \item{year}{integer, year}
 
 \item{meetingName}{name of the meeting in Japanese. example "予算委員会", "本会議"}
+
+\item{searchTerms}{search terms. either vector of search terms or a string of
+search terms separated by a space (e.g. "農家 補償")}
 
 \item{...}{}
 }
