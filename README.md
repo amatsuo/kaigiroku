@@ -1,11 +1,11 @@
 kaigiroku: an R client to access Kokkai Kaigiroku API
 =====================================================
 
-This package is to access the API of Kokkai Kaigiroku, conference menutes of Japanese National Diet. The API documentation is available [here](http://kokkai.ndl.go.jp/api.html).
+This package is to access the API of Kokkai Kaigiroku, conference minutes of Japanese National Diet. The API documentation is available [here](http://kokkai.ndl.go.jp/api.html) (only in Japanese).
 
 ### Prerequisites
 
-Nothing. You may need to download dependent packages during the installation.
+Nothign. You may need to download dependent packages during the installation.
 
 ### Installation
 
@@ -220,7 +220,7 @@ summary(data_corpus_qtspeech)
 #>  国家基本政策委員会合同審査会   1号 2016-05-18          58 片山虎之助
 #> 
 #> Source:  /Users/akitaka/Dropbox/rProjects/kaigiroku/* on x86_64 by akitaka
-#> Created: Thu Apr 20 15:51:58 2017
+#> Created: Thu Apr 20 15:57:47 2017
 #> Notes:
 
 # kwicly look at some key terms
@@ -314,7 +314,7 @@ topfeatures(data_dfm_qtspeech, n = 20) #looks better
 #> 主義 草案 状況 実質 改正 
 #>   24   22   21   19   19
 
-par(family = "HiraKakuProN-W3")
+par(family = "HiraKakuProN-W3") # this line is necessary if you use a Mac
 textplot_wordcloud(data_dfm_qtspeech, min.freq = 6, random.order = FALSE,
                    rot.per = .25, 
                    colors = RColorBrewer::brewer.pal(8,"Dark2"))
@@ -347,21 +347,21 @@ require(topicmodels)
 model_lda_qt_speeches <- LDA(convert(data_dfm_qtspeech_sent, to = "topicmodels"), 
                              k = 6)
 get_terms(model_lda_qt_speeches, 10)
-#>       Topic 1    Topic 2 Topic 3  Topic 4    Topic 5  Topic 6
-#>  [1,] "消費"     "憲法"  "思い"   "…"        "平和"   "・"   
-#>  [2,] "総理"     "議論"  "上げ"   "リー"     "御"     "実質" 
-#>  [3,] "税"       "思う"  "申"     "マン"     "主義"   "％"   
-#>  [4,] "％"       "自衛"  "政権"   "ショック" "憲法"   "名目" 
-#>  [5,] "〇"       "行使"  "状況"   "国会"     "草案"   "出"   
-#>  [6,] "増税"     "権"    "責任"   "・"       "党"     "示し" 
-#>  [7,] "言"       "改正"  "デフレ" "上げ"     "考え方" "問題" 
-#>  [8,] "引き上げ" "審査"  "国民"   "改革"     "貫"     "賃金" 
-#>  [9,] "経済"     "九条"  "意見"   "先ほど"   "岡田"   "思"   
-#> [10,] "委員"     "認識"  "党首"   "申"       "総理"   "〇"
+#>       Topic 1    Topic 2    Topic 3 Topic 4 Topic 5  Topic 6 
+#>  [1,] "上げ"     "平和"     "・"    "消費"  "…"      "憲法"  
+#>  [2,] "申"       "主義"     "実質"  "税"    "議論"   "改正"  
+#>  [3,] "消費"     "聞"       "％"    "〇"    "言"     "自衛"  
+#>  [4,] "思い"     "貫"       "名目"  "増税"  "草案"   "行使"  
+#>  [5,] "税"       "総理"     "思い"  "状況"  "憲法"   "権"    
+#>  [6,] "侵略"     "言"       "御"    "％"    "示し"   "思い"  
+#>  [7,] "引き上げ" "リー"     "判断"  "経済"  "党"     "草案"  
+#>  [8,] "委員"     "ショック" "提案"  "総理"  "考え方" "自民党"
+#>  [9,] "デフレ"   "マン"     "政策"  "認識"  "財政"   "九条"  
+#> [10,] "党"       "国会"     "〇"    "問題"  "思う"   "平和"
 # topics(model_lda_qt_speeches, 3)
 ```
 
 Comments and feedback
 ---------------------
 
-We welcome your comments and feedback. Please file issues on the issues page, and/or send us comments at <kbenoit@lse.ac.uk> and <A.Matsuo@lse.ac.uk>.
+I welcome your comments and feedback. Please file issues on the issues page, and/or send me comments at <A.Matsuo@lse.ac.uk>.

@@ -14,12 +14,12 @@ knitr::opts_chunk$set(
 
 # kaigiroku: an R client to access Kokkai Kaigiroku API
 
-This package is to access the API of Kokkai Kaigiroku, conference menutes of Japanese National Diet. The API documentation is available [here](http://kokkai.ndl.go.jp/api.html).
+This package is to access the API of Kokkai Kaigiroku, conference minutes of Japanese National Diet. The API documentation is available [here](http://kokkai.ndl.go.jp/api.html) (only in Japanese).
 
 
 ### Prerequisites
 
-Nothing. You may need to download dependent packages during the installation.
+Nothign. You may need to download dependent packages during the installation.
 
 ### Installation
 
@@ -148,4 +148,4 @@ get_terms(model_lda_qt_speeches, 10)
 
 ## Comments and feedback
 
-We welcome your comments and feedback.  Please file issues on the issues page, and/or send us comments at kbenoit@lse.ac.uk and A.Matsuo@lse.ac.uk.
+I welcome your comments and feedback.  Please file issues on the issues page, and/or send me comments at A.Matsuo@lse.ac.uk.
