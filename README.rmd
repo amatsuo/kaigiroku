@@ -32,7 +32,7 @@ devtools::install_github("amatsuo/kaigiroku")
 
 ## Examples
 
-At the moment, they only functionality this package provide is to download conference minutes of specific meetings (e.g. Budget Committee (予算委員会) and Plenary Meeting (本会議)) for a specified period.
+At the moment, the package provide only the functionality to download conference minutes of specific meetings (e.g. Budget Committee (予算委員会) and Plenary Meeting (本会議)) for a specified period. 
 
 ### Download Conference Minutes
 
@@ -45,11 +45,13 @@ plenary_speeches <- get_meeting(house = "Upper", startDate = "2017-01-01",
 
 # the following line will download all speeches at the budget committee meetings in 
 # the lower house meetings
-budgetcom_speeches <- get_meeting(house = "Lower", sessionNumber = 192, meetingName = "予算委員会")
+budgetcom_speeches <- get_meeting(house = "Lower", sessionNumber = 185, 
+                                  meetingName = "予算委員会")
 
 # the following line will download all speeches at the budget committee meetings in 
 # the Prime Minister's Questions (or Party Leader Debate, "国家基本政策委員会合同審査会")
-qt_speeches <- get_meeting(house = "Both", sessionNumber = 190, meetingName = "国家基本政策委員会合同審査会")
+qt_speeches <- get_meeting(house = "Both", sessionNumber = 190, 
+                           meetingName = "国家基本政策委員会合同審査会")
 head(qt_speeches)
 
 ```

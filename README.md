@@ -18,7 +18,7 @@ devtools::install_github("amatsuo/kaigiroku")
 Examples
 --------
 
-At the moment, they only functionality this package provide is to download conference minutes of specific meetings (e.g. Budget Committee (予算委員会) and Plenary Meeting (本会議)) for a specified period.
+At the moment, the package provide only the functionality to download conference minutes of specific meetings (e.g. Budget Committee (予算委員会) and Plenary Meeting (本会議)) for a specified period.
 
 ### Download Conference Minutes
 
@@ -45,15 +45,16 @@ plenary_speeches <- get_meeting(house = "Upper", startDate = "2017-01-01",
 
 # the following line will download all speeches at the budget committee meetings in 
 # the lower house meetings
-budgetcom_speeches <- get_meeting(house = "Lower", sessionNumber = 192, meetingName = "予算委員会")
-#> 6 records found
+budgetcom_speeches <- get_meeting(house = "Lower", sessionNumber = 185, 
+                                  meetingName = "予算委員会")
+#> 4 records found
 #> Fetching, startingRecord = 1
-#> Fetching, startingRecord = 3 
-#> Fetching, startingRecord = 5
+#> Fetching, startingRecord = 3
 
 # the following line will download all speeches at the budget committee meetings in 
 # the Prime Minister's Questions (or Party Leader Debate, "国家基本政策委員会合同審査会")
-qt_speeches <- get_meeting(house = "Both", sessionNumber = 190, meetingName = "国家基本政策委員会合同審査会")
+qt_speeches <- get_meeting(house = "Both", sessionNumber = 190, 
+                           meetingName = "国家基本政策委員会合同審査会")
 #> 1 records found
 #> Fetching, startingRecord = 1
 head(qt_speeches)
@@ -220,7 +221,7 @@ summary(data_corpus_qtspeech)
 #>  国家基本政策委員会合同審査会   1号 2016-05-18          58 片山虎之助
 #> 
 #> Source:  /Users/akitaka/Dropbox/rProjects/kaigiroku/* on x86_64 by akitaka
-#> Created: Thu Apr 20 15:57:47 2017
+#> Created: Thu Apr 20 16:25:11 2017
 #> Notes:
 
 # kwicly look at some key terms
@@ -347,17 +348,17 @@ require(topicmodels)
 model_lda_qt_speeches <- LDA(convert(data_dfm_qtspeech_sent, to = "topicmodels"), 
                              k = 6)
 get_terms(model_lda_qt_speeches, 10)
-#>       Topic 1    Topic 2    Topic 3 Topic 4 Topic 5  Topic 6 
-#>  [1,] "上げ"     "平和"     "・"    "消費"  "…"      "憲法"  
-#>  [2,] "申"       "主義"     "実質"  "税"    "議論"   "改正"  
-#>  [3,] "消費"     "聞"       "％"    "〇"    "言"     "自衛"  
-#>  [4,] "思い"     "貫"       "名目"  "増税"  "草案"   "行使"  
-#>  [5,] "税"       "総理"     "思い"  "状況"  "憲法"   "権"    
-#>  [6,] "侵略"     "言"       "御"    "％"    "示し"   "思い"  
-#>  [7,] "引き上げ" "リー"     "判断"  "経済"  "党"     "草案"  
-#>  [8,] "委員"     "ショック" "提案"  "総理"  "考え方" "自民党"
-#>  [9,] "デフレ"   "マン"     "政策"  "認識"  "財政"   "九条"  
-#> [10,] "党"       "国会"     "〇"    "問題"  "思う"   "平和"
+#>       Topic 1 Topic 2  Topic 3    Topic 4 Topic 5 Topic 6
+#>  [1,] "思い"  "上げ"   "言"       "憲法"  "…"     "消費" 
+#>  [2,] "岡田"  "思い"   "状況"     "平和"  "・"    "税"   
+#>  [3,] "御"    "申"     "デフレ"   "主義"  "議論"  "％"   
+#>  [4,] "党"    "御"     "引き上げ" "改正"  "実質"  "増税" 
+#>  [5,] "総理"  "思う"   "リー"     "草案"  "名目"  "〇"   
+#>  [6,] "議論"  "認識"   "マン"     "言"    "％"    "賃金" 
+#>  [7,] "国民"  "経済"   "ショック" "貫"    "政権"  "判断" 
+#>  [8,] "国会"  "党首"   "問題"     "総理"  "審査"  "景気" 
+#>  [9,] "改革"  "考え方" "・"       "自衛"  "〇"    "予想" 
+#> [10,] "社会"  "状況"   "起"       "行使"  "深"    "事実"
 # topics(model_lda_qt_speeches, 3)
 ```
 
