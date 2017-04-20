@@ -35,6 +35,8 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         meetingName = NA,
                         searchTerms = NA,
                         ... ) {
+  require(XML)
+  require(dplyr)
   if(! (house %in% c("Upper", "Lower", "Both"))) {
     stop("house parameter has to be one of c(\"Upper\", \"Lower\", \"Both\")")
   }
@@ -53,7 +55,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
   }
   if(sum(!is.na(c(sessionNumber, startDate, endDate, year))) > 2 |
      (sum(!is.na(c(sessionNumber, startDate, endDate, year))) == 2 &
-      sum(is.na(c(startDate, endDate)) == 0))){
+      sum(is.na(c(startDate, endDate)) != 0))){
     stop("Too many parameters are specifid, you need to specy either
          startDate and endDate,
          sessionNumber, or
@@ -126,6 +128,7 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
 
     }
   }
+  speechdf$speech <- as.character(speechdf$speech)
+  class(speechdf) <- c(class(speechdf), "kaigroku_data")
   return(speechdf)
-
 }
