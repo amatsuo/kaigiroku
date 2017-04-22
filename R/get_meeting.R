@@ -3,14 +3,14 @@
 #' @description This function returns all speeches based on the specified conditions.
 #' Three parameters have to be specified. The first is the name of house
 #' (\code{house}).
-#' The second is the name of meeting
-#' (\code{meetingName}) (e.g. "文教委員会", "本会議").
+#' The second is the name of meeting in Japanese
+#' (\code{meetingName}) (e.g. "Yosan Inkai", "Honkaigi").
 #' And the third is the time period. There are three ways to specifiy the time period
 #' (1. starting and ending date, 2. National Diet session number, and 3.
 #' year). If the specified conditions exceed the limit of the number of records
 #' for one API call (2 records per call), this function will repeatedly call the
 #' API until all records are obtained.
-#' @param house Name of the house, value is "Upper", "Lower", or "Both"
+#' @param house Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin)
 #' @param sessionNumber integer, session number
 #' @param startDate starting date to obtain the record in the format of "%Y-%m-%d"
 #'  (e.g. "1999-01-01"), if you specified session number, you cannot assign this
@@ -19,9 +19,9 @@
 #'  (e.g. "1999-01-01"), if you specified session number, you cannot assign this
 #'  option.
 #' @param year integer, year
-#' @param meetingName name of the meeting in Japanese. example "予算委員会", "本会議"
+#' @param meetingName name of the meeting in Japanese. example "Yosan iinkai", "Honkaigi"
 #' @param searchTerms search terms. either vector of search terms or a string of
-#' search terms separated by a space (e.g. "農家 補償")
+#' search terms separated by a space
 #' @param ...
 #'
 #' @return the function returns a data.frame of speeches.
@@ -40,11 +40,12 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
   if(! (house %in% c("Upper", "Lower", "Both"))) {
     stop("house parameter has to be one of c(\"Upper\", \"Lower\", \"Both\")")
   }
-  houseName <- ifelse(house == "Lower", "衆議院",
-                      ifelse( house == "Upper", "参議院", "両院"))
+  houseName <- ifelse(house == "Lower", "\u8846\u8B70\u9662",
+                      ifelse( house == "Upper", "\u53C2\u8B70\u9662",
+                              "\u4E21\u9662"))
 
   if(is.na(meetingName)) {
-    stop("you need to specify meetingName (e.g. 予算委員会)")
+    stop("you need to specify meetingName (e.g. \u4E88\u7B97\u59D4\u54E1\u4F1A)")
   }
 
   if(sum(!is.na(c(sessionNumber, startDate, endDate, year))) == 0 ){

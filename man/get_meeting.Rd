@@ -8,7 +8,7 @@ get_meeting(house = "Lower", sessionNumber = NA, startDate = NA,
   endDate = NA, year = NA, meetingName = NA, searchTerms = NA, ...)
 }
 \arguments{
-\item{house}{Name of the house, value is "Upper", "Lower", or "Both"}
+\item{house}{Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin)}
 
 \item{sessionNumber}{integer, session number}
 
@@ -22,10 +22,10 @@ option.}
 
 \item{year}{integer, year}
 
-\item{meetingName}{name of the meeting in Japanese. example "予算委員会", "本会議"}
+\item{meetingName}{name of the meeting in Japanese. example "Yosan iinkai", "Honkaigi"}
 
 \item{searchTerms}{search terms. either vector of search terms or a string of
-search terms separated by a space (e.g. "農家 補償")}
+search terms separated by a space}
 
 \item{...}{}
 }
@@ -36,8 +36,8 @@ the function returns a data.frame of speeches.
 This function returns all speeches based on the specified conditions.
 Three parameters have to be specified. The first is the name of house
 (\code{house}).
-The second is the name of meeting
-(\code{meetingName}) (e.g. "文教委員会", "本会議").
+The second is the name of meeting in Japanese
+(\code{meetingName}) (e.g. "Yosan Inkai", "Honkaigi").
 And the third is the time period. There are three ways to specifiy the time period
 (1. starting and ending date, 2. National Diet session number, and 3.
 year). If the specified conditions exceed the limit of the number of records
