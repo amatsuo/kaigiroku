@@ -5,7 +5,7 @@ This package is to access the API of Kokkai Kaigiroku, conference minutes of Jap
 
 ### Prerequisites
 
-Nothign. You may need to download dependent packages during the installation.
+Nothing. You may need to download dependent packages during the installation.
 
 ### Installation
 
@@ -221,99 +221,74 @@ summary(data_corpus_qtspeech)
 #>  国家基本政策委員会合同審査会   1号 2016-05-18          58 片山虎之助
 #> 
 #> Source:  /Users/akitaka/Dropbox/rProjects/kaigiroku/* on x86_64 by akitaka
-#> Created: Thu Apr 20 16:25:11 2017
+#> Created: Thu Apr 20 17:46:18 2017
 #> Notes:
 
 # kwicly look at some key terms
-kwic(data_corpus_qtspeech, "政府") # government 
-#>                                                   
-#>  [安倍晋三 3, 267] 、 なりわい の 再建 に | 政府 |
-#>  [岡田克也 6, 100]     、 一月 時点 で の | 政府 |
-#>  [岡田克也 6, 192]   、 つまり 半年 前 の | 政府 |
-#>                          
-#>  一丸 と な って 力      
-#>  見通し は、 実質 が     
-#>  の 見通し を かなり 下回
-kwic(data_corpus_qtspeech, "経済") # government 
-#>                                                           
-#>   [岡田克也 4, 216]         こと で、 必ずや その | 経済 |
-#>   [岡田克也 4, 236]            です ね。 そして、 | 経済 |
-#>   [岡田克也 4, 287]             っ た わけ です。 | 経済 |
-#>   [岡田克也 4, 412]      、 やはり この 一年半 の | 経済 |
-#>   [安倍晋三 5, 106]           ます から、 我々 の | 経済 |
-#>     [岡田克也 6, 9]            総理 の やら れ た | 経済 |
-#>   [岡田克也 6, 273]               、 私 は、 この | 経済 |
-#>   [安倍晋三 7, 112]          ます。 そこで、 世界 | 経済 |
-#>   [安倍晋三 7, 120]           で あり ます。 世界 | 経済 |
-#>   [安倍晋三 7, 226]         中 において、 中国 の | 経済 |
-#>   [安倍晋三 7, 377]        。 あした も 国際 金融 | 経済 |
-#>    [岡田克也 8, 10]             われ た、 中国 の | 経済 |
-#>    [安倍晋三 9, 11]           おり ます よう に、 | 経済 |
-#>   [安倍晋三 9, 252]        まして、 そして また、 | 経済 |
-#>  [岡田克也 10, 220]          って い ます よう な | 経済 |
-#>  [安倍晋三 13, 121] このように 思い ます。 いわば | 経済 |
-#>   [志位和夫 39, 36]       引き上げ て 以来、 日本 | 経済 |
-#>  [志位和夫 41, 148]             て、 この よう な | 経済 |
-#>                            
-#>  状況 を つくり出す こと が
-#>  判断 条項 も 削除 さ      
-#>  の 現状 は どうか。       
-#>  運営 が うまく いか なか  
-#>  政策 は 功 を 奏          
-#>  政策 を 全 否定 する      
-#>  運営、 あれだけ、 これから
-#>  の 状況 で あり ます      
-#>  の 状況 について 言 え    
-#>  の 減速 という リスク も  
-#>  分析 会合 を 開 い        
-#>  が どう なる か、         
-#>  という の は 生き物 でも  
-#>  の 状況 について の リスク
-#>  状況、 特に 消費 が       
-#>  を しっかり と 成長 さ    
-#>  の 六 割 を 占める        
-#>  情勢 の も と で
-kwic(data_corpus_qtspeech, "成長") # growth
-#>                                                        
-#>    [安倍晋三 5, 25]               一・ 七％ の | 成長 |
-#>    [安倍晋三 5, 88]               六・ 四％ の | 成長 |
-#>  [安倍晋三 13, 125] いわば 経済 を しっかり と | 成長 |
-#>                       
-#>  で ご ざ いま した   
-#>  で あり まして、 実質
-#>  さ せ てい かな け
+kwic(data_corpus_qtspeech, "政府", window = 4) # government 
+#>                                                                    
+#>  [安倍晋三 3, 267] なりわい の 再建 に | 政府 | 一丸 と な って    
+#>  [岡田克也 6, 100]     一月 時点 で の | 政府 | 見通し は、 実質   
+#>  [岡田克也 6, 192]   つまり 半年 前 の | 政府 | の 見通し を かなり
+kwic(data_corpus_qtspeech, "経済", window = 4) # ecnomy
+#>                                                                           
+#>   [岡田克也 4, 216]      で、 必ずや その | 経済 | 状況 を つくり出す こと
+#>   [岡田克也 4, 236]         ね。 そして、 | 経済 | 判断 条項 も 削除      
+#>   [岡田克也 4, 287]        た わけ です。 | 経済 | の 現状 は どうか      
+#>   [岡田克也 4, 412] やはり この 一年半 の | 経済 | 運営 が うまく いか    
+#>   [安倍晋三 5, 106]        から、 我々 の | 経済 | 政策 は 功 を          
+#>     [岡田克也 6, 9]         の やら れ た | 経済 | 政策 を 全 否定        
+#>   [岡田克也 6, 273]          私 は、 この | 経済 | 運営、 あれだけ、      
+#>   [安倍晋三 7, 112]      。 そこで、 世界 | 経済 | の 状況 で あり        
+#>   [安倍晋三 7, 120]      あり ます。 世界 | 経済 | の 状況 について 言    
+#>   [安倍晋三 7, 226]    において、 中国 の | 経済 | の 減速 という リスク  
+#>   [安倍晋三 7, 377]   あした も 国際 金融 | 経済 | 分析 会合 を 開        
+#>    [岡田克也 8, 10]          た、 中国 の | 経済 | が どう なる か        
+#>    [安倍晋三 9, 11]        ます よう に、 | 経済 | という の は 生き物    
+#>   [安倍晋三 9, 252]      、 そして また、 | 経済 | の 状況 について の    
+#>  [岡田克也 10, 220]       い ます よう な | 経済 | 状況、 特に 消費       
+#>  [安倍晋三 13, 121]    思い ます。 いわば | 経済 | を しっかり と 成長    
+#>   [志位和夫 39, 36]        て 以来、 日本 | 経済 | の 六 割 を            
+#>  [志位和夫 41, 148]       、 この よう な | 経済 | 情勢 の も と
+kwic(data_corpus_qtspeech, "成長", window = 4) # growth
+#>                                                                  
+#>    [安倍晋三 5, 25]          ・ 七％ の | 成長 | で ご ざ いま   
+#>    [安倍晋三 5, 88]          ・ 四％ の | 成長 | で あり まして、
+#>  [安倍晋三 13, 125] 経済 を しっかり と | 成長 | さ せ てい かな
 ```
 
 ``` r
+require(readtext)
+#> Loading required package: readtext
 # generate tokens and then dfm 
-data_dfm_qtspeech <- tokens(data_corpus_qtspeech) %>% dfm()
-print(data_dfm_qtspeech)
-#> Document-feature matrix of: 40 documents, 1,306 features (91.4% sparse).
+data_dfm_qtspeech <- tokens(data_corpus_qtspeech, remove_punct = TRUE) %>% dfm()
+#topfeatures(data_dfm_qtspeech, n = 100)
 
 # remove stopwords and punctuations (using slothlib list http://www.dl.kuis.kyoto-u.ac.jp/slothlib/)
 # Warning: the word list removes potentially important words
-jpstopwords <- readLines("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt")
-jpstopwords <- c(jpstopwords, "。", "、", "")
-jpstopwords <- jpstopwords[jpstopwords != ""]
+jpstopwords <- readtext("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt")
+jpstopwords <- tokens(jpstopwords[jpstopwords != ""]) %>% as.character
 # remove stopwords
 data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech, features = jpstopwords)
 
 topfeatures(data_dfm_qtspeech, n = 20) # still a lot of unnecessary features
-#>     の     は     を     が   ます     に     で     て     し     と 
-#>    385    355    266    217    208    207    201    151    127    124 
-#>     も という     い   ない   って     か     な   です   いる     た 
-#>    121    119    108    105     90     80     79     76     75     75
+#>       は       を     ます       て       し   という       い     ない 
+#>      355      266      208      151      127      119      108      105 
+#>     って     です     いる       た     あり     した       れ     てい 
+#>       90       76       75       75       67       65       62       62 
+#>     思い において     その       ご 
+#>       54       51       48       48
 
 # remove entries only with hiraganas (ひらがな)
 data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech, features = "^[あ-ん]+$",
                                  valuetype = "regex")
 print(data_dfm_qtspeech)
-#> Document-feature matrix of: 40 documents, 878 features (94.8% sparse).
+#> Document-feature matrix of: 40 documents, 872 features (94.8% sparse).
 topfeatures(data_dfm_qtspeech, n = 20) #looks better
-#> 思い 憲法 消費 上げ 総理   ％   言 議論 平和   ・   申   税    …   御   〇 
-#>   54   43   41   40   38   34   34   31   31   29   28   27   26   24   24 
-#> 主義 草案 状況 実質 改正 
-#>   24   22   21   19   19
+#> 思い 憲法 消費 上げ 総理   言 議論 平和   申   税   御   〇 主義 草案 状況 
+#>   54   43   41   40   38   34   31   31   28   27   24   24   24   22   21 
+#> 実質 改正   党 経済 国民 
+#>   19   19   18   18   17
 
 par(family = "HiraKakuProN-W3") # this line is necessary if you use a Mac
 textplot_wordcloud(data_dfm_qtspeech, min.freq = 6, random.order = FALSE,
@@ -330,7 +305,7 @@ We are going to esitmate an LDA topic model. First regenerate dfm at sentence le
 
 ``` r
 data_corpus_qtspeech_sent <- corpus_reshape(data_corpus_qtspeech, to = "sentences")
-data_dfm_qtspeech_sent <- data_corpus_qtspeech_sent %>% tokens %>% dfm
+data_dfm_qtspeech_sent <- data_corpus_qtspeech_sent %>% tokens(remove_punct = TRUE) %>% dfm
 data_dfm_qtspeech_sent <- dfm_remove(data_dfm_qtspeech_sent, features = jpstopwords)
 
 # remove entries only with hiraganas (ひらがな)
@@ -348,17 +323,17 @@ require(topicmodels)
 model_lda_qt_speeches <- LDA(convert(data_dfm_qtspeech_sent, to = "topicmodels"), 
                              k = 6)
 get_terms(model_lda_qt_speeches, 10)
-#>       Topic 1 Topic 2  Topic 3    Topic 4 Topic 5 Topic 6
-#>  [1,] "思い"  "上げ"   "言"       "憲法"  "…"     "消費" 
-#>  [2,] "岡田"  "思い"   "状況"     "平和"  "・"    "税"   
-#>  [3,] "御"    "申"     "デフレ"   "主義"  "議論"  "％"   
-#>  [4,] "党"    "御"     "引き上げ" "改正"  "実質"  "増税" 
-#>  [5,] "総理"  "思う"   "リー"     "草案"  "名目"  "〇"   
-#>  [6,] "議論"  "認識"   "マン"     "言"    "％"    "賃金" 
-#>  [7,] "国民"  "経済"   "ショック" "貫"    "政権"  "判断" 
-#>  [8,] "国会"  "党首"   "問題"     "総理"  "審査"  "景気" 
-#>  [9,] "改革"  "考え方" "・"       "自衛"  "〇"    "予想" 
-#> [10,] "社会"  "状況"   "起"       "行使"  "深"    "事実"
+#>       Topic 1    Topic 2  Topic 3    Topic 4 Topic 5 Topic 6 
+#>  [1,] "上げ"     "議論"   "消費"     "自衛"  "憲法"  "〇"    
+#>  [2,] "申"       "国会"   "総理"     "実質"  "平和"  "消費"  
+#>  [3,] "思い"     "審査"   "委員"     "権"    "主義"  "総理"  
+#>  [4,] "御"       "示し"   "税"       "賃金"  "改正"  "出"    
+#>  [5,] "状況"     "党"     "引き上げ" "言"    "草案"  "名目"  
+#>  [6,] "世界"     "深"     "予想"     "思い"  "貫"    "税"    
+#>  [7,] "認識"     "改革"   "お答え"   "増税"  "言"    "デフレ"
+#>  [8,] "リー"     "具体"   "言"       "財政"  "思う"  "政権"  
+#>  [9,] "マン"     "同時に" "社会"     "集団"  "侵略"  "実質"  
+#> [10,] "ショック" "合"     "保障"     "指摘"  "総理"  "年間"
 # topics(model_lda_qt_speeches, 3)
 ```
 

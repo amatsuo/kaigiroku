@@ -19,7 +19,7 @@ This package is to access the API of Kokkai Kaigiroku, conference minutes of Jap
 
 ### Prerequisites
 
-Nothign. You may need to download dependent packages during the installation.
+Nothing. You may need to download dependent packages during the installation.
 
 ### Installation
 
@@ -50,6 +50,7 @@ budgetcom_speeches <- get_meeting(house = "Lower", sessionNumber = 185,
 
 # the following line will download all speeches at the budget committee meetings in 
 # the Prime Minister's Questions (or Party Leader Debate, "国家基本政策委員会合同審査会")
+# qt_speeches are used in the later part of demos
 qt_speeches <- get_meeting(house = "Both", sessionNumber = 190, 
                            meetingName = "国家基本政策委員会合同審査会")
 head(qt_speeches)
@@ -88,22 +89,22 @@ data_corpus_qtspeech <- corpus(qt_speeches$speech,
 summary(data_corpus_qtspeech)
 
 # kwicly look at some key terms
-kwic(data_corpus_qtspeech, "政府") # government 
-kwic(data_corpus_qtspeech, "経済") # government 
-kwic(data_corpus_qtspeech, "成長") # growth
+kwic(data_corpus_qtspeech, "政府", window = 4) # government 
+kwic(data_corpus_qtspeech, "経済", window = 4) # ecnomy
+kwic(data_corpus_qtspeech, "成長", window = 4) # growth
 ```
 
 
 ```{r}
+require(readtext)
 # generate tokens and then dfm 
-data_dfm_qtspeech <- tokens(data_corpus_qtspeech) %>% dfm()
-print(data_dfm_qtspeech)
+data_dfm_qtspeech <- tokens(data_corpus_qtspeech, remove_punct = TRUE) %>% dfm()
+#topfeatures(data_dfm_qtspeech, n = 100)
 
 # remove stopwords and punctuations (using slothlib list http://www.dl.kuis.kyoto-u.ac.jp/slothlib/)
 # Warning: the word list removes potentially important words
-jpstopwords <- readLines("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt")
-jpstopwords <- c(jpstopwords, "。", "、", "")
-jpstopwords <- jpstopwords[jpstopwords != ""]
+jpstopwords <- readtext("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt")
+jpstopwords <- tokens(jpstopwords[jpstopwords != ""]) %>% as.character
 # remove stopwords
 data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech, features = jpstopwords)
 
@@ -127,7 +128,7 @@ textplot_wordcloud(data_dfm_qtspeech, min.freq = 6, random.order = FALSE,
 We are going to esitmate an LDA topic model. First regenerate dfm at sentence level
 ```{r}
 data_corpus_qtspeech_sent <- corpus_reshape(data_corpus_qtspeech, to = "sentences")
-data_dfm_qtspeech_sent <- data_corpus_qtspeech_sent %>% tokens %>% dfm
+data_dfm_qtspeech_sent <- data_corpus_qtspeech_sent %>% tokens(remove_punct = TRUE) %>% dfm
 data_dfm_qtspeech_sent <- dfm_remove(data_dfm_qtspeech_sent, features = jpstopwords)
 
 # remove entries only with hiraganas (ひらがな)
