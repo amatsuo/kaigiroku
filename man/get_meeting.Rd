@@ -5,7 +5,8 @@
 \title{Get speeches by meeting}
 \usage{
 get_meeting(house = "Lower", sessionNumber = NA, startDate = NA,
-  endDate = NA, year = NA, meetingName = NA, searchTerms = NA, ...)
+  endDate = NA, year = NA, meetingName = NA, searchTerms = NA,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{house}{Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin)}
@@ -26,6 +27,8 @@ option.}
 
 \item{searchTerms}{search terms. either vector of search terms or a string of
 search terms separated by a space}
+
+\item{verbose}{display detailed message about the download progress}
 
 \item{...}{}
 }

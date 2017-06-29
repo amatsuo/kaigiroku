@@ -22,6 +22,7 @@
 #' @param meetingName name of the meeting in Japanese. example "Yosan iinkai", "Honkaigi"
 #' @param searchTerms search terms. either vector of search terms or a string of
 #' search terms separated by a space
+#' @param verbose display detailed message about the download progress
 #' @param ...
 #'
 #' @return the function returns a data.frame of speeches.
@@ -34,6 +35,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         startDate = NA, endDate = NA, year = NA,
                         meetingName = NA,
                         searchTerms = NA,
+                        verbose = TRUE,
                         ... ) {
   require(XML)
   require(dplyr)
@@ -78,11 +80,12 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                              houseName, meetingName, startDate, endDate)
   speechdf <- api_access_function(api_function = "meeting",
                                   searchCondition = searchCondition,
-                                  searchTerms = searchTerms)
+                                  searchTerms = searchTerms,
+                                  verbose = verbose)
   return(speechdf)
 }
 
-api_access_function <- function(api_function,  searchCondition, searchTerms = NA){
+api_access_function <- function(api_function,  searchCondition, searchTerms = NA, verbose){
   if(!is.na(searchTerms)){
     searchTerms <- unlist(strsplit(searchTerms, "\\s+"))
     searchCondition <- paste(searchCondition, sprintf("any=%s", searchTerms),
@@ -108,7 +111,7 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
     return(NULL)
   } else {
     cat(sprintf("%s records found\n", numberOfRecords))
-    cat("Fetching, startingRecord = 1\n")
+    if(verbose) cat("Fetching (current_record_position: ", 1, ")\n")
   }
   speechdf <- xml_to_speechdf(xml_out)
 
@@ -117,7 +120,7 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
     while(1) {
       nextRecordPosition <- getNodeSet(xml_out, "//nextRecordPosition")[[1]] %>%
         xmlValue() %>% as.numeric
-      cat("Fetching, startingRecord =", nextRecordPosition, "\n")
+      if(verbose) cat("Fetching (current_record_position: ", nextRecordPosition, ")\n")
       searchConditionCont <- sprintf("%s&startRecord=%s", searchCondition,
                                      nextRecordPosition)
       searchConditionEnc <- URLencode(searchConditionCont, reserved = TRUE)
