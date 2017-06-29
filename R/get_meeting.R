@@ -114,7 +114,7 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
     return(NULL)
   } else {
     cat(sprintf("%s records found\n", numberOfRecords))
-    if(verbose) cat("Fetching (current_record_position: ", 1, ")\n")
+    if(verbose) cat(paste0("Fetching (current_record_position: ", 1, ")\n"))
   }
   speechdf <- xml_to_speechdf(xml_out)
 
@@ -124,7 +124,7 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
       Sys.sleep(sleep)
       nextRecordPosition <- getNodeSet(xml_out, "//nextRecordPosition")[[1]] %>%
         xmlValue() %>% as.numeric
-      if(verbose) cat("Fetching (current_record_position: ", nextRecordPosition, ")\n")
+      if(verbose) cat(paste0("Fetching (current_record_position: ", nextRecordPosition, ")\n"))
       searchConditionCont <- sprintf("%s&startRecord=%s", searchCondition,
                                      nextRecordPosition)
       searchConditionEnc <- URLencode(searchConditionCont, reserved = TRUE)
