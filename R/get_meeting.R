@@ -23,6 +23,7 @@
 #' @param searchTerms search terms. either vector of search terms or a string of
 #' search terms separated by a space
 #' @param verbose display detailed message about the download progress
+#' @param sleep the length of break between each time to fetch the record (in seconds)
 #' @param ...
 #'
 #' @return the function returns a data.frame of speeches.
@@ -36,6 +37,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         meetingName = NA,
                         searchTerms = NA,
                         verbose = TRUE,
+                        sleep = 3,
                         ... ) {
   require(XML)
   require(dplyr)
@@ -81,11 +83,12 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
   speechdf <- api_access_function(api_function = "meeting",
                                   searchCondition = searchCondition,
                                   searchTerms = searchTerms,
-                                  verbose = verbose)
+                                  verbose = verbose,
+                                  sleep = sleep)
   return(speechdf)
 }
 
-api_access_function <- function(api_function,  searchCondition, searchTerms = NA, verbose){
+api_access_function <- function(api_function,  searchCondition, searchTerms = NA, verbose, sleep){
   if(!is.na(searchTerms)){
     searchTerms <- unlist(strsplit(searchTerms, "\\s+"))
     searchCondition <- paste(searchCondition, sprintf("any=%s", searchTerms),
@@ -118,6 +121,7 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
   # Loop when more than 2 records
   if(length(getNodeSet(xml_out, "//nextRecordPosition")) > 0) {
     while(1) {
+      Sys.sleep(sleep)
       nextRecordPosition <- getNodeSet(xml_out, "//nextRecordPosition")[[1]] %>%
         xmlValue() %>% as.numeric
       if(verbose) cat("Fetching (current_record_position: ", nextRecordPosition, ")\n")
