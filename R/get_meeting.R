@@ -104,7 +104,8 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
     xmlValue() %>% as.numeric(.)
   if( numberOfRecords == 0)
   {
-    stop(paste0("No record to match the search criteria\n\t", searchCondition))
+    warning(paste0("No record to match the search criteria\n\t", searchCondition))
+    return(NULL)
   } else {
     cat(sprintf("%s records found\n", numberOfRecords))
     cat("Fetching, startingRecord = 1\n")
