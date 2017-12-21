@@ -15,7 +15,8 @@ xml_to_speechdf <- function(xml_out){
     meeting_list <- xmlToList(meeting_node, simplify = TRUE)
     meeting_list <- meeting_list[which(names(meeting_list) != "speechRecord")]
     meeting_info <- data.frame(meeting_list)
-    speech_df <- xmlToDataFrame(node = getNodeSet(meeting_node, "speechRecord"))
+    speech_df <- xmlToDataFrame(node = getNodeSet(meeting_node, "speechRecord"), 
+                                stringsAsFactors = FALSE)
     meeting_df <- cbind(meeting_info, speech_df)
     out_data <- rbind(out_data, meeting_df)
   }
