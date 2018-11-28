@@ -1,4 +1,4 @@
-# v0.1.3
+# v0.1.3 (2018/11/28)
 
 * Dealing with the slow response of the server
 
