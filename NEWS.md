@@ -1,3 +1,7 @@
+# v0.1.3
+
+* Dealing with the slow response of the server
+
 # v0.1.2
 
 * Update `session_info.rda` up to the end of Session 194

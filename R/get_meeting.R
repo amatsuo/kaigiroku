@@ -120,17 +120,35 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
 
   # Loop when more than 2 records
   if(length(getNodeSet(xml_out, "//nextRecordPosition")) > 0) {
+    nextRecordPosition_prev <- 0
     while(1) {
       Sys.sleep(sleep)
       nextRecordPosition <- getNodeSet(xml_out, "//nextRecordPosition")[[1]] %>%
         xmlValue() %>% as.numeric
+      if(nextRecordPosition == nextRecordPosition_prev) {
+        nextRecordPosition <- nextRecordPosition_prev + position_increment
+        message("error recovery: set current_record_position at ", nextRecordPosition)
+      } else {
+        position_increment <- nextRecordPosition - nextRecordPosition_prev
+      }
       if(verbose) cat(paste0("Fetching (current_record_position: ", nextRecordPosition, ")\n"))
       searchConditionCont <- sprintf("%s&startRecord=%s", searchCondition,
                                      nextRecordPosition)
       searchConditionEnc <- URLencode(searchConditionCont, reserved = TRUE)
       url <- paste(baseUrl, searchConditionEnc, sep = "?")
-      xml_out <- xmlParse(url, isURL = TRUE)
+      tryCatch({
+        xml_out <- xmlParse(url, isURL = TRUE)
+      }, error = function(e) {
+        message("xmlParse timeout, try other methods")
+        tmp_file <- tempfile()
+        download.file(url, tmp_file)
+        xml_out <- xmlParse(tmp_file)
+      })
+
+
       speechdf <- rbind(speechdf, xml_to_speechdf(xml_out))
+      nextRecordPosition_prev <- nextRecordPosition
+
       if(length(getNodeSet(xml_out, "//nextRecordPosition")) == 0) {
         break
       }
