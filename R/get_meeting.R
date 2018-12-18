@@ -106,7 +106,12 @@ api_access_function <- function(api_function,  searchCondition,
     baseUrl <- "http://kokkai.ndl.go.jp/api/1.0/speech"
   }
   url <- paste(baseUrl, searchConditionEnc, sep = "?")
-  xml_out <- xmlParse(url, isURL = TRUE)
+  #xml_out <- xmlParse(url, isURL = TRUE)
+  tmp_file <- tempfile()
+  quiet <- !downloadMessage
+  download.file(url, tmp_file, quiet = quiet)
+  xml_out <- xmlParse(tmp_file)
+  file.remove(tmp_file)
 
   # stop if no record found
   # saveXML(xmlRoot(xml_out), file = 'R/test_scripts/xml_dump.txt')
@@ -146,7 +151,6 @@ api_access_function <- function(api_function,  searchCondition,
       # }, error = function(e) {
       #message("xmlParse timeout, try other methods")
       tmp_file <- tempfile()
-      quiet <- !downloadMessage
       download.file(url, tmp_file, quiet = quiet)
       xml_out <- xmlParse(tmp_file)
       file.remove(tmp_file)
