@@ -162,7 +162,16 @@ api_access_function <- function(api_function,  searchCondition,
                    }
                    if(file.exists(tmp_file)) file.remove(tmp_file)
                    message("\nDownload timeout, will retry (trycount #", counter,')')
-                 })
+                 },
+                 error = function(e) {
+                   counter <<- counter + 1
+                   if(counter >= 10) {
+                     break
+                   }
+                   if(file.exists(tmp_file)) file.remove(tmp_file)
+                   message("\nDownload error, will retry (trycount #", counter,')')
+                 }
+        )
       }
       xml_out <- xmlParse(tmp_file)
       file.remove(tmp_file)
