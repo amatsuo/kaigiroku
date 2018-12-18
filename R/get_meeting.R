@@ -24,6 +24,7 @@
 #' search terms separated by a space
 #' @param verbose display detailed message about the download progress
 #' @param sleep the length of break between each time to fetch the record (in seconds)
+#' @param downloadMessage show \code{download.file()} progress, default \code{FALSE}
 #' @param ...
 #'
 #' @return the function returns a data.frame of speeches.
@@ -37,6 +38,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         meetingName = NA,
                         searchTerms = NA,
                         verbose = TRUE,
+                        downloadMessage = FALSE,
                         sleep = 3,
                         ... ) {
   require(XML)
@@ -84,11 +86,14 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                                   searchCondition = searchCondition,
                                   searchTerms = searchTerms,
                                   verbose = verbose,
+                                  downloadMessage = downloadMessage,
                                   sleep = sleep)
   return(speechdf)
 }
 
-api_access_function <- function(api_function,  searchCondition, searchTerms = NA, verbose, sleep){
+api_access_function <- function(api_function,  searchCondition,
+                                searchTerms = NA, verbose, sleep,
+                                downloadMessage){
   if(!is.na(searchTerms)){
     searchTerms <- unlist(strsplit(searchTerms, "\\s+"))
     searchCondition <- paste(searchCondition, sprintf("any=%s", searchTerms),
@@ -101,7 +106,12 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
     baseUrl <- "http://kokkai.ndl.go.jp/api/1.0/speech"
   }
   url <- paste(baseUrl, searchConditionEnc, sep = "?")
-  xml_out <- xmlParse(url, isURL = TRUE)
+  #xml_out <- xmlParse(url, isURL = TRUE)
+  tmp_file <- tempfile()
+  quiet <- !downloadMessage
+  download.file(url, tmp_file, quiet = quiet)
+  xml_out <- xmlParse(tmp_file)
+  file.remove(tmp_file)
 
   # stop if no record found
   # saveXML(xmlRoot(xml_out), file = 'R/test_scripts/xml_dump.txt')
@@ -136,14 +146,15 @@ api_access_function <- function(api_function,  searchCondition, searchTerms = NA
                                      nextRecordPosition)
       searchConditionEnc <- URLencode(searchConditionCont, reserved = TRUE)
       url <- paste(baseUrl, searchConditionEnc, sep = "?")
-      tryCatch({
-        xml_out <- xmlParse(url, isURL = TRUE)
-      }, error = function(e) {
-        message("xmlParse timeout, try other methods")
-        tmp_file <- tempfile()
-        download.file(url, tmp_file)
-        xml_out <- xmlParse(tmp_file)
-      })
+      # tryCatch({
+      #   xml_out <- xmlParse(url, isURL = TRUE)
+      # }, error = function(e) {
+      #message("xmlParse timeout, try other methods")
+      tmp_file <- tempfile()
+      download.file(url, tmp_file, quiet = quiet)
+      xml_out <- xmlParse(tmp_file)
+      file.remove(tmp_file)
+      #})
 
 
       speechdf <- rbind(speechdf, xml_to_speechdf(xml_out))
