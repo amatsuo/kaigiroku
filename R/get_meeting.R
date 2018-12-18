@@ -43,6 +43,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         ... ) {
   require(XML)
   require(dplyr)
+  require(R.utils)
   if(! (house %in% c("Upper", "Lower", "Both"))) {
     stop("house parameter has to be one of c(\"Upper\", \"Lower\", \"Both\")")
   }
@@ -151,7 +152,18 @@ api_access_function <- function(api_function,  searchCondition,
       # }, error = function(e) {
       #message("xmlParse timeout, try other methods")
       tmp_file <- tempfile()
-      download.file(url, tmp_file, quiet = quiet)
+      counter <- 0
+      while(!file.exists(tmp_file)) {
+        tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = 30),
+                 TimeoutException = function(ex) {
+                   counter <<- counter + 1
+                   if(counter >= 10) {
+                     break
+                   }
+                   if(file.exists(tmp_file)) file.remove(tmp_file)
+                   message("\nDownload timeout, will retry (trycount #", counter,')')
+                 })
+      }
       xml_out <- xmlParse(tmp_file)
       file.remove(tmp_file)
       #})
