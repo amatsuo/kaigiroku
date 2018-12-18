@@ -6,7 +6,7 @@
 \usage{
 get_meeting(house = "Lower", sessionNumber = NA, startDate = NA,
   endDate = NA, year = NA, meetingName = NA, searchTerms = NA,
-  verbose = TRUE, sleep = 3, ...)
+  verbose = TRUE, downloadMessage = FALSE, sleep = 3, ...)
 }
 \arguments{
 \item{house}{Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin)}
@@ -29,6 +29,8 @@ option.}
 search terms separated by a space}
 
 \item{verbose}{display detailed message about the download progress}
+
+\item{downloadMessage}{show \code{download.file()} progress, default \code{FALSE}}
 
 \item{sleep}{the length of break between each time to fetch the record (in seconds)}
 
