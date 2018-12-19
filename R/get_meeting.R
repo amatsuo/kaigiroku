@@ -170,7 +170,6 @@ api_access_function <- function(api_function,  searchCondition,
 file_download <- function(url, quiet = FALSE){
   tmp_file <- tempfile()
   counter <- 0
-  browser()
   while(!file.exists(tmp_file)) {
     tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = 45),
              TimeoutException = function(ex) {
