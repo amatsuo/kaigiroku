@@ -190,5 +190,6 @@ file_download <- function(url, quiet = FALSE){
              }
     )
   }
+  Sys.sleep(1)
   return(tmp_file)
 }
