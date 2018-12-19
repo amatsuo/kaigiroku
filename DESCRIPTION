@@ -1,7 +1,7 @@
 Package: kaigiroku
 Type: Package
 Title: R Client to Access Kokkai Kaigiroku API
-Version: 0.1.3
+Version: 0.2
 Authors@R: c(person("Akitaka", "Matsuo", email = "A.Matsuo@lse.ac.uk", 
     role = c("aut", "cre") ))
 Maintainer: Akitaka Matsuo <matsuoakitaka@gmail.com>
