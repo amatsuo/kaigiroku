@@ -41,9 +41,9 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         downloadMessage = FALSE,
                         sleep = 3,
                         ... ) {
-  requireNamespace("XML")
-  requireNamespace("dplyr")
-  requireNamespace("R.utils")
+  require("XML")
+  require("dplyr")
+  require("R.utils")
   if(! (house %in% c("Upper", "Lower", "Both"))) {
     stop("house parameter has to be one of c(\"Upper\", \"Lower\", \"Both\")")
   }
@@ -170,6 +170,7 @@ api_access_function <- function(api_function,  searchCondition,
 file_download <- function(url, quiet = FALSE){
   tmp_file <- tempfile()
   counter <- 0
+  browser()
   while(!file.exists(tmp_file)) {
     tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = 45),
              TimeoutException = function(ex) {
@@ -181,6 +182,7 @@ file_download <- function(url, quiet = FALSE){
                message("\nDownload timeout, will retry (trycount #", counter,')')
              },
              error = function(e) {
+               print(e)
                counter <<- counter + 1
                if(counter >= 10) {
                  break
