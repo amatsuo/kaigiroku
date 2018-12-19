@@ -41,8 +41,9 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         downloadMessage = FALSE,
                         sleep = 3,
                         ... ) {
-  require(XML)
-  require(dplyr)
+  requireNamespace("XML")
+  requireNamespace("dplyr")
+  requireNamespace("R.utils")
   if(! (house %in% c("Upper", "Lower", "Both"))) {
     stop("house parameter has to be one of c(\"Upper\", \"Lower\", \"Both\")")
   }
@@ -107,9 +108,8 @@ api_access_function <- function(api_function,  searchCondition,
   }
   url <- paste(baseUrl, searchConditionEnc, sep = "?")
   #xml_out <- xmlParse(url, isURL = TRUE)
-  tmp_file <- tempfile()
   quiet <- !downloadMessage
-  download.file(url, tmp_file, quiet = quiet)
+  tmp_file <- file_download(url, quiet = quiet)
   xml_out <- xmlParse(tmp_file)
   file.remove(tmp_file)
 
@@ -146,15 +146,11 @@ api_access_function <- function(api_function,  searchCondition,
                                      nextRecordPosition)
       searchConditionEnc <- URLencode(searchConditionCont, reserved = TRUE)
       url <- paste(baseUrl, searchConditionEnc, sep = "?")
-      # tryCatch({
-      #   xml_out <- xmlParse(url, isURL = TRUE)
-      # }, error = function(e) {
-      #message("xmlParse timeout, try other methods")
-      tmp_file <- tempfile()
-      download.file(url, tmp_file, quiet = quiet)
+
+
+      tmp_file <- file_download(url, quiet)
       xml_out <- xmlParse(tmp_file)
       file.remove(tmp_file)
-      #})
 
 
       speechdf <- rbind(speechdf, xml_to_speechdf(xml_out))
@@ -169,4 +165,30 @@ api_access_function <- function(api_function,  searchCondition,
   speechdf$speech <- as.character(speechdf$speech)
   class(speechdf) <- c(class(speechdf), "kaigroku_data")
   return(speechdf)
+}
+
+file_download <- function(url, quiet = FALSE){
+  tmp_file <- tempfile()
+  counter <- 0
+  while(!file.exists(tmp_file)) {
+    tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = 45),
+             TimeoutException = function(ex) {
+               counter <<- counter + 1
+               if(counter >= 10) {
+                 break
+               }
+               if(file.exists(tmp_file)) file.remove(tmp_file)
+               message("\nDownload timeout, will retry (trycount #", counter,')')
+             },
+             error = function(e) {
+               counter <<- counter + 1
+               if(counter >= 10) {
+                 break
+               }
+               if(file.exists(tmp_file)) file.remove(tmp_file)
+               message("\nDownload error, will retry (trycount #", counter,')')
+             }
+    )
+  }
+  return(tmp_file)
 }
