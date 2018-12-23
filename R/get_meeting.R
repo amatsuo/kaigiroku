@@ -174,20 +174,30 @@ file_download <- function(url, quiet = FALSE){
     tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = 45),
              TimeoutException = function(ex) {
                counter <<- counter + 1
-               if(counter >= 10) {
-                 break
-               }
                if(file.exists(tmp_file)) file.remove(tmp_file)
-               message("\nDownload timeout, will retry (trycount #", counter,')')
+               if(counter >= 10){
+                 stop("too many failures, stop downloading")
+               } else if(counter >= 8){
+                 message("\nDownload timeout, will retry after 60 seconds (trycount #", counter,')')
+                 Sys.sleep(60)
+               } else {
+                 message("\nDownload timeout, will retry after 10 seconds (trycount #", counter,')')
+                 Sys.sleep(10)
+               }
              },
              error = function(e) {
                print(e)
                counter <<- counter + 1
-               if(counter >= 10) {
-                 break
-               }
                if(file.exists(tmp_file)) file.remove(tmp_file)
-               message("\nDownload error, will retry (trycount #", counter,')')
+               if(counter >= 10){
+                 stop("too many failures, stop downloading")
+               } else if(counter >= 8){
+                 message("\nDownload error, will retry after 60 seconds (trycount #", counter,')')
+                 Sys.sleep(60)
+               } else {
+                 message("\nDownload error, will retry after 10 seconds (trycount #", counter,')')
+                 Sys.sleep(10)
+               }
              }
     )
   }
