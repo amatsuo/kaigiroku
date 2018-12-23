@@ -171,7 +171,9 @@ file_download <- function(url, quiet = FALSE){
   tmp_file <- tempfile()
   counter <- 0
   while(!file.exists(tmp_file)) {
-    tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = 45),
+    if(couter <= 5) to <- 45
+    else to <- 300
+    tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = to),
              TimeoutException = function(ex) {
                counter <<- counter + 1
                if(file.exists(tmp_file)) file.remove(tmp_file)
