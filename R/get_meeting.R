@@ -174,7 +174,7 @@ file_download <- function(url, quiet = FALSE){
   tmp_file <- tempfile()
   counter <- 0
   while(!file.exists(tmp_file)) {
-    if(couter <= 8) to <- 45
+    if(counter <= 8) to <- 45
     else to <- 300
     tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = to),
              TimeoutException = function(ex) {
