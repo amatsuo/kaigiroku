@@ -181,7 +181,7 @@ file_download <- function(url, quiet = FALSE){
                counter <<- counter + 1
                if(file.exists(tmp_file)) file.remove(tmp_file)
                if(counter >= 10){
-                 message("Down load failed too many times, go to next record")
+                 message("Download failed too many times. Go to next record")
                  return(NULL)
                } else if(counter >= 8){
                  message("\nDownload timeout, will retry after 60 seconds (trycount #", counter,')')
@@ -196,7 +196,7 @@ file_download <- function(url, quiet = FALSE){
                counter <<- counter + 1
                if(file.exists(tmp_file)) file.remove(tmp_file)
                if(counter >= 10){
-                 message("Down load failed too many times, go to next record")
+                 message("Download failed too many times. Go to next record")
                  return(NULL)
                } else if(counter >= 8){
                  message("\nDownload error, will retry after 60 seconds (trycount #", counter,')')
