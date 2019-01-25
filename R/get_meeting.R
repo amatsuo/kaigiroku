@@ -149,6 +149,9 @@ api_access_function <- function(api_function,  searchCondition,
 
 
       tmp_file <- file_download(url, quiet)
+      if(is.null(tmp_file)) {
+        next
+      }
       xml_out <- xmlParse(tmp_file)
       file.remove(tmp_file)
 
@@ -171,12 +174,15 @@ file_download <- function(url, quiet = FALSE){
   tmp_file <- tempfile()
   counter <- 0
   while(!file.exists(tmp_file)) {
-    tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = 45),
+    if(counter <= 8) to <- 45
+    else to <- 300
+    tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = to),
              TimeoutException = function(ex) {
                counter <<- counter + 1
                if(file.exists(tmp_file)) file.remove(tmp_file)
                if(counter >= 10){
-                 stop("too many failures, stop downloading")
+                 message("Download failed too many times. Go to next record")
+                 return(NULL)
                } else if(counter >= 8){
                  message("\nDownload timeout, will retry after 60 seconds (trycount #", counter,')')
                  Sys.sleep(60)
@@ -190,7 +196,8 @@ file_download <- function(url, quiet = FALSE){
                counter <<- counter + 1
                if(file.exists(tmp_file)) file.remove(tmp_file)
                if(counter >= 10){
-                 stop("too many failures, stop downloading")
+                 message("Download failed too many times. Go to next record")
+                 return(NULL)
                } else if(counter >= 8){
                  message("\nDownload error, will retry after 60 seconds (trycount #", counter,')')
                  Sys.sleep(60)
