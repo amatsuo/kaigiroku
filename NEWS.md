@@ -1,3 +1,8 @@
+# v0.2.1 (2020/01/22)
+
+* Dealing with API change
+  - the returning data.frame include new fields (e.g.  "speakerYomi", "speakerGroup", "speakerPosition")
+
 # v0.2 (2018/12/19)
 
 * Fully implement the download failure recovery
