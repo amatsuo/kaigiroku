@@ -18,6 +18,11 @@ xml_to_speechdf <- function(xml_out){
     speech_df <- xmlToDataFrame(node = getNodeSet(meeting_node, "speechRecord"),
                                 stringsAsFactors = FALSE)
     meeting_df <- cbind(meeting_info, speech_df)
+    
+    if(ncol(meeting_df) > 21){
+      meeting_df <- meeting_df[-10]
+    }
+    
     out_data <- rbind(out_data, meeting_df)
   }
   return(out_data)

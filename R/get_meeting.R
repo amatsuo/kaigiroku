@@ -110,7 +110,7 @@ api_access_function <- function(api_function,  searchCondition,
   #xml_out <- xmlParse(url, isURL = TRUE)
   quiet <- !downloadMessage
   tmp_file <- file_download(url, quiet = quiet)
-  xml_out <- xmlParse(tmp_file)
+  xml_out <- xmlParse(tmp_file, encoding = "UTF-8")
   file.remove(tmp_file)
 
   # stop if no record found
@@ -152,7 +152,7 @@ api_access_function <- function(api_function,  searchCondition,
       if(is.null(tmp_file)) {
         next
       }
-      xml_out <- xmlParse(tmp_file)
+      xml_out <- xmlParse(tmp_file, encoding = "UTF-8")
       file.remove(tmp_file)
 
 
