@@ -156,7 +156,7 @@ api_access_function <- function(api_function,  searchCondition,
       file.remove(tmp_file)
 
 
-      speechdf <- rbind(speechdf, xml_to_speechdf(xml_out))
+      speechdf <- bind_rows(speechdf, xml_to_speechdf(xml_out))
       nextRecordPosition_prev <- nextRecordPosition
 
       if(length(getNodeSet(xml_out, "//nextRecordPosition")) == 0) {
