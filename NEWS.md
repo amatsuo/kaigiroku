@@ -1,3 +1,8 @@
+# v0.2.2 (2022/01/03)
+
+* Specify the encoding in XML parsing
+* Bug fix for missing fields
+
 # v0.2.1 (2020/01/22)
 
 * Dealing with API change
