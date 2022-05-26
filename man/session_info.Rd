@@ -4,7 +4,9 @@
 \name{session_info}
 \alias{session_info}
 \title{data on the National Diet sessions}
-\format{An object of class \code{data.frame} with 195 rows and 7 columns.}
+\format{
+An object of class \code{data.frame} with 208 rows and 5 columns.
+}
 \usage{
 session_info
 }
