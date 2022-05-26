@@ -25,25 +25,25 @@
 #' @param verbose display detailed message about the download progress
 #' @param sleep the length of break between each time to fetch the record (in seconds)
 #' @param downloadMessage show \code{download.file()} progress, default \code{FALSE}
-#' @param ...
 #'
 #' @return the function returns a data.frame of speeches.
 #' @export
 #'
 #' @examples
-#' budget_122 <- get_meeting(meetingName = "予算委員会", sessionNumber = 122)
-#' head(budget_122)
+#' hm_122 <- get_meeting(meetingName = "議院運営委員会", sessionNumber = 122)
+#' head(hm_122)
 get_meeting <- function(house = "Lower", sessionNumber = NA,
                         startDate = NA, endDate = NA, year = NA,
                         meetingName = NA,
                         searchTerms = NA,
                         verbose = TRUE,
                         downloadMessage = FALSE,
-                        sleep = 3,
-                        ... ) {
-  require("XML")
-  require("dplyr")
-  require("R.utils")
+                        sleep = 3) {
+  # require("jsonlite")
+  # require("tidyr")
+  # require("XML")
+  # require("dplyr")
+  # require("R.utils")
   if(! (house %in% c("Upper", "Lower", "Both"))) {
     stop("house parameter has to be one of c(\"Upper\", \"Lower\", \"Both\")")
   }
@@ -100,24 +100,30 @@ api_access_function <- function(api_function,  searchCondition,
     searchCondition <- paste(searchCondition, sprintf("any=%s", searchTerms),
                              sep = "&")
   }
+  searchCondition <- paste(searchCondition, "recordPacking=json", sep = "&")
   searchConditionEnc <- URLencode(searchCondition, reserved = TRUE)
   if(api_function == "meeting"){
-    baseUrl <- "http://kokkai.ndl.go.jp/api/1.0/meeting"
+    baseUrl <- "http://kokkai.ndl.go.jp/api/meeting"
   } else {
-    baseUrl <- "http://kokkai.ndl.go.jp/api/1.0/speech"
+    baseUrl <- "http://kokkai.ndl.go.jp/api/speech"
   }
   url <- paste(baseUrl, searchConditionEnc, sep = "?")
   #xml_out <- xmlParse(url, isURL = TRUE)
   quiet <- !downloadMessage
   tmp_file <- file_download(url, quiet = quiet)
-  xml_out <- xmlParse(tmp_file, encoding = "UTF-8")
+  json_out <- jsonlite::fromJSON(tmp_file)
   file.remove(tmp_file)
+  
+  # xml_out <- xmlParse(tmp_file, encoding = "UTF-8")
+  # file.remove(tmp_file)
 
   # stop if no record found
   # saveXML(xmlRoot(xml_out), file = 'R/test_scripts/xml_dump.txt')
   #browser()
-  numberOfRecords <- getNodeSet(xml_out, "//numberOfRecords")[[1]] %>%
-    xmlValue() %>% as.numeric(.)
+  numberOfRecords <- json_out$numberOfRecords %>%  as.numeric()
+    
+  # numberOfRecords <- getNodeSet(xml_out, "//numberOfRecords")[[1]] %>%
+  #   xmlValue() %>% as.numeric(.)
   if( numberOfRecords == 0)
   {
     warning(paste0("No record to match the search criteria\n\t", searchCondition))
@@ -126,15 +132,16 @@ api_access_function <- function(api_function,  searchCondition,
     cat(sprintf("%s records found\n", numberOfRecords))
     if(verbose) cat(paste0("Fetching (current_record_position: ", 1, ")\n"))
   }
-  speechdf <- xml_to_speechdf(xml_out)
+  # speechdf <- xml_to_speechdf(xml_out)
+  speechdf <- json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord))
 
   # Loop when more than 2 records
-  if(length(getNodeSet(xml_out, "//nextRecordPosition")) > 0) {
+  # if(length(getNodeSet(xml_out, "//nextRecordPosition")) > 0) {
+  if(!is.null(json_out$nextRecordPosition)) {
     nextRecordPosition_prev <- 0
     while(1) {
       Sys.sleep(sleep)
-      nextRecordPosition <- getNodeSet(xml_out, "//nextRecordPosition")[[1]] %>%
-        xmlValue() %>% as.numeric
+      nextRecordPosition <- json_out$nextRecordPosition %>% as.numeric
       if(nextRecordPosition == nextRecordPosition_prev) {
         nextRecordPosition <- nextRecordPosition_prev + position_increment
         message("error recovery: set current_record_position at ", nextRecordPosition)
@@ -142,7 +149,7 @@ api_access_function <- function(api_function,  searchCondition,
         position_increment <- nextRecordPosition - nextRecordPosition_prev
       }
       if(verbose) cat(paste0("Fetching (current_record_position: ", nextRecordPosition, ")\n"))
-      searchConditionCont <- sprintf("%s&startRecord=%s", searchCondition,
+      searchConditionCont <- sprintf("%s&startRecord=%s&recordPacking=json", searchCondition,
                                      nextRecordPosition)
       searchConditionEnc <- URLencode(searchConditionCont, reserved = TRUE)
       url <- paste(baseUrl, searchConditionEnc, sep = "?")
@@ -152,20 +159,18 @@ api_access_function <- function(api_function,  searchCondition,
       if(is.null(tmp_file)) {
         next
       }
-      xml_out <- xmlParse(tmp_file, encoding = "UTF-8")
+      json_out <- jsonlite::fromJSON(tmp_file)
       file.remove(tmp_file)
 
-
-      speechdf <- bind_rows(speechdf, xml_to_speechdf(xml_out))
+      speechdf <- bind_rows(speechdf, json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord)))
       nextRecordPosition_prev <- nextRecordPosition
-
-      if(length(getNodeSet(xml_out, "//nextRecordPosition")) == 0) {
+      if(is.null(json_out$nextRecordPosition)) {
         break
       }
 
     }
   }
-  speechdf$speech <- as.character(speechdf$speech)
+  #speechdf$speech <- as.character(speechdf$speech)
   class(speechdf) <- c(class(speechdf), "kaigroku_data")
   return(speechdf)
 }
