@@ -25,6 +25,7 @@
 #' @param verbose display detailed message about the download progress
 #' @param sleep the length of break between each time to fetch the record (in seconds)
 #' @param downloadMessage show \code{download.file()} progress, default \code{FALSE}
+#' @param meeting_list get the list of meeting, instead of actual speeches. Default \code{FALSE}.
 #'
 #' @return the function returns a data.frame of speeches.
 #' @export
@@ -38,7 +39,8 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                         searchTerms = NA,
                         verbose = TRUE,
                         downloadMessage = FALSE,
-                        sleep = 3) {
+                        sleep = 3, 
+                        meeting_list = FALSE) {
   # require("jsonlite")
   # require("tidyr")
   # require("XML")
@@ -51,7 +53,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
                       ifelse( house == "Upper", "\u53C2\u8B70\u9662",
                               "\u4E21\u9662"))
 
-  if(is.na(meetingName)) {
+  if(is.na(meetingName) & meeting_list == FALSE) {
     stop("you need to specify meetingName (e.g. \u4E88\u7B97\u59D4\u54E1\u4F1A)")
   }
 
@@ -81,9 +83,19 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
     startDate <- session_info[session_info$sessionNumber == sessionNumber, "startDate"]
     endDate <- session_info[session_info$sessionNumber == sessionNumber, "endDate"]
   }
-  searchCondition <- sprintf("nameOfHouse=%s&nameOfMeeting=%s&from=%s&until=%s",
-                             houseName, meetingName, startDate, endDate)
-  speechdf <- api_access_function(api_function = "meeting",
+  if(!is.na(meetingName)){
+    searchCondition <- sprintf("nameOfHouse=%s&nameOfMeeting=%s&from=%s&until=%s",
+                               houseName, meetingName, startDate, endDate)
+  } else {
+    searchCondition <- sprintf("nameOfHouse=%s&from=%s&until=%s",
+                               houseName, startDate, endDate)
+  }
+  if(meeting_list == T){
+    api_func <- "meeting_list"
+  } else {
+    api_func <- "meeting"
+  }
+  speechdf <- api_access_function(api_function = api_func,
                                   searchCondition = searchCondition,
                                   searchTerms = searchTerms,
                                   verbose = verbose,
@@ -105,7 +117,7 @@ api_access_function <- function(api_function,  searchCondition,
   if(api_function == "meeting"){
     baseUrl <- "http://kokkai.ndl.go.jp/api/meeting"
   } else {
-    baseUrl <- "http://kokkai.ndl.go.jp/api/speech"
+    baseUrl <- "http://kokkai.ndl.go.jp/api/meeting_list"
   }
   url <- paste(baseUrl, searchConditionEnc, sep = "?")
   #xml_out <- xmlParse(url, isURL = TRUE)
@@ -133,7 +145,11 @@ api_access_function <- function(api_function,  searchCondition,
     if(verbose) cat(paste0("Fetching (current_record_position: ", 1, ")\n"))
   }
   # speechdf <- xml_to_speechdf(xml_out)
-  speechdf <- json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord))
+  if(api_function == "meeting") {
+    speechdf <- json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord))
+  } else {
+    speechdf <- json_out$meetingRecord %>% as_tibble %>% select(-speechRecord)
+  }
 
   # Loop when more than 2 records
   # if(length(getNodeSet(xml_out, "//nextRecordPosition")) > 0) {
@@ -161,8 +177,12 @@ api_access_function <- function(api_function,  searchCondition,
       }
       json_out <- jsonlite::fromJSON(tmp_file)
       file.remove(tmp_file)
-
-      speechdf <- bind_rows(speechdf, json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord)))
+      if(api_function == "meeting") {
+        speechdf <- bind_rows(speechdf, json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord)))
+      } else {
+        speechdf <- bind_rows(speechdf, json_out$meetingRecord %>% as_tibble %>% select(-speechRecord))
+      }
+      
       nextRecordPosition_prev <- nextRecordPosition
       if(is.null(json_out$nextRecordPosition)) {
         break
@@ -181,7 +201,7 @@ file_download <- function(url, quiet = FALSE){
   while(!file.exists(tmp_file)) {
     if(counter <= 8) to <- 45
     else to <- 300
-    tryCatch(withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = to),
+    tryCatch(R.utils::withTimeout(download.file(url, tmp_file, quiet = quiet), timeout = to),
              TimeoutException = function(ex) {
                counter <<- counter + 1
                if(file.exists(tmp_file)) file.remove(tmp_file)
