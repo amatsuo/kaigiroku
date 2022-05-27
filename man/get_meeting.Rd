@@ -66,4 +66,5 @@ API until all records are obtained.
 hm_122 <- get_meeting(meetingName = "\u904B\u8F38\u59D4\u54E1\u4F1A", sessionNumber = 126)
 head(hm_122)
 }
+
 }
