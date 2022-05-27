@@ -35,6 +35,8 @@
 #' hm_122 <- get_meeting(meetingName = "\u904B\u8F38\u59D4\u54E1\u4F1A", sessionNumber = 126)
 #' head(hm_122)
 #' }
+#' 
+#' @importFrom utils data
 get_meeting <- function(house = "Lower", sessionNumber = NA,
                         startDate = NA, endDate = NA, year = NA,
                         meetingName = NA,
@@ -81,7 +83,7 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
     startDate <- as.Date(paste0(year, "-01-01"))
     endDate <- as.Date(paste0(year, "-12-31"))
   } else {
-    data("session_info")
+    data("session_info", envir = environment())
     startDate <- session_info[session_info$sessionNumber == sessionNumber, "startDate"]
     endDate <- session_info[session_info$sessionNumber == sessionNumber, "endDate"]
   }
@@ -106,6 +108,9 @@ get_meeting <- function(house = "Lower", sessionNumber = NA,
   return(speechdf)
 }
 
+
+#' @importFrom utils URLencode
+#' @import dplyr
 api_access_function <- function(api_function,  searchCondition,
                                 searchTerms = NA, verbose, sleep,
                                 downloadMessage){
@@ -148,9 +153,9 @@ api_access_function <- function(api_function,  searchCondition,
   }
   # speechdf <- xml_to_speechdf(xml_out)
   if(api_function == "meeting") {
-    speechdf <- json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord))
+    speechdf <- tidyr::unnest(json_out$meetingRecord, cols = c("speechRecord"))
   } else {
-    speechdf <- json_out$meetingRecord %>% as_tibble %>% select(-speechRecord)
+    speechdf <- json_out$meetingRecord %>% as_tibble %>% select(-"speechRecord")
   }
 
   # Loop when more than 2 records
@@ -180,9 +185,9 @@ api_access_function <- function(api_function,  searchCondition,
       json_out <- jsonlite::fromJSON(tmp_file)
       file.remove(tmp_file)
       if(api_function == "meeting") {
-        speechdf <- bind_rows(speechdf, json_out$meetingRecord %>% tidyr::unnest(., cols = c(speechRecord)))
+        speechdf <- bind_rows(speechdf, tidyr::unnest(json_out$meetingRecord, cols = c("speechRecord")))
       } else {
-        speechdf <- bind_rows(speechdf, json_out$meetingRecord %>% as_tibble %>% select(-speechRecord))
+        speechdf <- bind_rows(speechdf, json_out$meetingRecord %>% as_tibble %>% select(-"speechRecord"))
       }
       
       nextRecordPosition_prev <- nextRecordPosition
@@ -197,6 +202,10 @@ api_access_function <- function(api_function,  searchCondition,
   return(speechdf)
 }
 
+
+
+
+#' @importFrom utils download.file
 file_download <- function(url, quiet = FALSE){
   tmp_file <- tempfile()
   counter <- 0
