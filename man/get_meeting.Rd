@@ -4,14 +4,24 @@
 \alias{get_meeting}
 \title{Get speeches by meeting}
 \usage{
-get_meeting(house = "Lower", sessionNumber = NA, startDate = NA,
-  endDate = NA, year = NA, meetingName = NA, searchTerms = NA,
-  verbose = TRUE, downloadMessage = FALSE, sleep = 3, ...)
+get_meeting(
+  house = "Lower",
+  sessionNumber = NA,
+  startDate = NA,
+  endDate = NA,
+  year = NA,
+  meetingName = NA,
+  searchTerms = NA,
+  verbose = TRUE,
+  downloadMessage = FALSE,
+  sleep = 3,
+  meeting_list = FALSE
+)
 }
 \arguments{
-\item{house}{Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin)}
+\item{house}{Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin).}
 
-\item{sessionNumber}{integer, session number}
+\item{sessionNumber}{integer, session number.}
 
 \item{startDate}{starting date to obtain the record in the format of "%Y-%m-%d"
 (e.g. "1999-01-01"), if you specified session number, you cannot assign this
@@ -21,20 +31,20 @@ option.}
 (e.g. "1999-01-01"), if you specified session number, you cannot assign this
 option.}
 
-\item{year}{integer, year}
+\item{year}{integer, year of the record.}
 
-\item{meetingName}{name of the meeting in Japanese. example "Yosan iinkai", "Honkaigi"}
+\item{meetingName}{name of the meeting in Japanese. example "Yosan iinkai", "Honkaigi".}
 
 \item{searchTerms}{search terms. either vector of search terms or a string of
-search terms separated by a space}
+search terms separated by a space.}
 
-\item{verbose}{display detailed message about the download progress}
+\item{verbose}{display detailed message about the download progress.}
 
-\item{downloadMessage}{show \code{download.file()} progress, default \code{FALSE}}
+\item{downloadMessage}{show \code{download.file()} progress, default \code{FALSE}.}
 
-\item{sleep}{the length of break between each time to fetch the record (in seconds)}
+\item{sleep}{the length of break between each time to fetch the record (in seconds).}
 
-\item{...}{}
+\item{meeting_list}{get the list of meeting, instead of actual speeches. Default \code{FALSE}.}
 }
 \value{
 the function returns a data.frame of speeches.
@@ -48,10 +58,13 @@ The second is the name of meeting in Japanese
 And the third is the time period. There are three ways to specifiy the time period
 (1. starting and ending date, 2. National Diet session number, and 3.
 year). If the specified conditions exceed the limit of the number of records
-for one API call (2 records per call), this function will repeatedly call the
+for one API call (3 records per call), this function will repeatedly call the
 API until all records are obtained.
 }
 \examples{
-budget_122 <- get_meeting(meetingName = "予算委員会", sessionNumber = 122)
-head(budget_122)
+\dontrun{
+hm_122 <- get_meeting(meetingName = "\u904B\u8F38\u59D4\u54E1\u4F1A", sessionNumber = 126)
+head(hm_122)
+}
+
 }

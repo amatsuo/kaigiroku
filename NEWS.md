@@ -1,3 +1,10 @@
+# v0.5 (2022/05/27)
+
+* Switch from XML to json 
+  * Now get the data in JSON format
+  * Does not require XML package anymore. Instead, use jsonline and tidyr (for unnesting).
+* Add the functionality of `meeting_list` download. This will help to identify names of meeting in the specific period.
+
 # v0.2.2 (2022/01/03)
 
 * Specify the encoding in XML parsing
