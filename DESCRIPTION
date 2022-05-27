@@ -1,12 +1,14 @@
 Package: kaigiroku
 Type: Package
 Title: R Client to Access Kokkai Kaigiroku API
-Version: 0.2.2
+Version: 0.5
 Authors@R: c(person("Akitaka", "Matsuo", email = "a.matsuo@essex.ac.uk", 
     role = c("aut", "cre") ))
 Maintainer: Akitaka Matsuo <matsuoakitaka@gmail.com>
-Description: To be provided
-Imports: utils, XML, dplyr, R.utils, jsonlite, tidyr
+Description: Search and download data from Kokkai Kaigiroku API.
+Imports: utils, dplyr, R.utils, jsonlite, tidyr
+URL: https://github.com/amatsuo/kaigiroku
+BugReports: https://github.com/amatsuo/kaigiroku/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
