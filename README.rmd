@@ -1,7 +1,7 @@
 ---
 output:
   md_document:
-    variant: markdown_github
+    variant: gfm
 ---
 
 ```{r, echo = FALSE}
@@ -44,7 +44,7 @@ plenary_speeches <- get_meeting(house = "Upper", startDate = "2017-01-01",
                                 endDate = "2017-01-31", meetingName = "本会議")
 
 # the following line will download all speeches at the budget committee meetings in 
-# the lower house meetings
+# the lower house during the 185th session.
 budgetcom_speeches <- get_meeting(house = "Lower", sessionNumber = 185, 
                                   meetingName = "予算委員会")
 
@@ -80,7 +80,8 @@ qt_speeches$speech <- stri_replace_all_regex(qt_speeches$speech, "^\\s{2,}.+\n",
 ```
 
 
-Now, generate corpus.
+Now, generate corpus and then tokens object.
+
 ```{r}
 # generate quanteda corpus object
 data_corpus_qtspeech <- corpus(qt_speeches$speech, 
@@ -88,10 +89,12 @@ data_corpus_qtspeech <- corpus(qt_speeches$speech,
                                docvars = qt_speeches[, c(1:5, 8:9)])
 summary(data_corpus_qtspeech)
 
+data_tokens_qtspeech <- tokens(data_corpus_qtspeech)
+
 # kwicly look at some key terms
-kwic(data_corpus_qtspeech, "政府", window = 4) # government 
-kwic(data_corpus_qtspeech, "経済", window = 4) # ecnomy
-kwic(data_corpus_qtspeech, "成長", window = 4) # growth
+kwic(data_tokens_qtspeech, "政府", window = 4) # government 
+kwic(data_tokens_qtspeech, "経済", window = 4) # ecnomy
+kwic(data_tokens_qtspeech, "成長", window = 4) # growth
 ```
 
 
@@ -106,20 +109,24 @@ data_dfm_qtspeech <- tokens(data_corpus_qtspeech, remove_punct = TRUE) %>% dfm()
 jpstopwords <- readtext("http://svn.sourceforge.jp/svnroot/slothlib/CSharp/Version1/SlothLib/NLP/Filter/StopWord/word/Japanese.txt")
 jpstopwords <- tokens(jpstopwords[jpstopwords != ""]) %>% as.character
 # remove stopwords
-data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech, features = jpstopwords)
+data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech, 
+                                valuetype = "fixed",
+                                pattern = jpstopwords)
 
 topfeatures(data_dfm_qtspeech, n = 20) # still a lot of unnecessary features
 
 # remove entries only with hiraganas (ひらがな)
-data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech, features = "^[あ-ん]+$",
-                                 valuetype = "regex")
+data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech, 
+                                pattern = "^[あ-ん]+$",
+                                valuetype = "regex")
 print(data_dfm_qtspeech)
 topfeatures(data_dfm_qtspeech, n = 20) #looks better
 
-par(family = "HiraKakuProN-W3") # this line is necessary if you use a Mac
-textplot_wordcloud(data_dfm_qtspeech, min.freq = 6, random.order = FALSE,
-                   rot.per = .25, 
-                   colors = RColorBrewer::brewer.pal(8,"Dark2"))
+quanteda.textplots::textplot_wordcloud(
+  data_dfm_qtspeech, min_count = 6, random_order = FALSE,
+  rotation = .25, 
+  family = "HiraKakuProN-W3", # or other fonts 
+  color = RColorBrewer::brewer.pal(8,"Dark2"))
 
 ```
 
@@ -129,11 +136,13 @@ We are going to esitmate an LDA topic model. First regenerate dfm at sentence le
 ```{r}
 data_corpus_qtspeech_sent <- corpus_reshape(data_corpus_qtspeech, to = "sentences")
 data_dfm_qtspeech_sent <- data_corpus_qtspeech_sent %>% tokens(remove_punct = TRUE) %>% dfm
-data_dfm_qtspeech_sent <- dfm_remove(data_dfm_qtspeech_sent, features = jpstopwords)
+data_dfm_qtspeech_sent <- dfm_remove(data_dfm_qtspeech_sent, 
+                                     valuetype = "fixed",
+                                     pattern = jpstopwords)
 
 # remove entries only with hiraganas (ひらがな)
 data_dfm_qtspeech_sent <- dfm_remove(data_dfm_qtspeech_sent, 
-                                     features = "^[あ-ん]+$",
+                                     pattern = "^[あ-ん]+$",
                                      valuetype = "regex")
 ```
 
