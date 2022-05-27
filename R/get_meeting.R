@@ -8,31 +8,33 @@
 #' And the third is the time period. There are three ways to specifiy the time period
 #' (1. starting and ending date, 2. National Diet session number, and 3.
 #' year). If the specified conditions exceed the limit of the number of records
-#' for one API call (2 records per call), this function will repeatedly call the
+#' for one API call (3 records per call), this function will repeatedly call the
 #' API until all records are obtained.
-#' @param house Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin)
-#' @param sessionNumber integer, session number
+#' @param house Name of the house, value is "Upper" (Sangiin), "Lower" (Shugin), or "Both" (Ryouin).
+#' @param sessionNumber integer, session number.
 #' @param startDate starting date to obtain the record in the format of "%Y-%m-%d"
 #'  (e.g. "1999-01-01"), if you specified session number, you cannot assign this
 #'  option.
 #' @param endDate ending date to obtain the record in the format of "%Y-%m-%d"
 #'  (e.g. "1999-01-01"), if you specified session number, you cannot assign this
 #'  option.
-#' @param year integer, year
-#' @param meetingName name of the meeting in Japanese. example "Yosan iinkai", "Honkaigi"
+#' @param year integer, year of the record.
+#' @param meetingName name of the meeting in Japanese. example "Yosan iinkai", "Honkaigi".
 #' @param searchTerms search terms. either vector of search terms or a string of
-#' search terms separated by a space
-#' @param verbose display detailed message about the download progress
-#' @param sleep the length of break between each time to fetch the record (in seconds)
-#' @param downloadMessage show \code{download.file()} progress, default \code{FALSE}
+#' search terms separated by a space.
+#' @param verbose display detailed message about the download progress.
+#' @param sleep the length of break between each time to fetch the record (in seconds).
+#' @param downloadMessage show \code{download.file()} progress, default \code{FALSE}.
 #' @param meeting_list get the list of meeting, instead of actual speeches. Default \code{FALSE}.
 #'
 #' @return the function returns a data.frame of speeches.
 #' @export
 #'
 #' @examples
-#' hm_122 <- get_meeting(meetingName = "議院運営委員会", sessionNumber = 122)
+#' \dontrun{
+#' hm_122 <- get_meeting(meetingName = "\u904B\u8F38\u59D4\u54E1\u4F1A", sessionNumber = 126)
 #' head(hm_122)
+#' }
 get_meeting <- function(house = "Lower", sessionNumber = NA,
                         startDate = NA, endDate = NA, year = NA,
                         meetingName = NA,
