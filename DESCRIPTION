@@ -5,7 +5,7 @@ Version: 0.5
 Authors@R: c(person("Akitaka", "Matsuo", email = "matsuoakitaka@gmail.com", 
     role = c("aut", "cre") ))
 Maintainer: Akitaka Matsuo <matsuoakitaka@gmail.com>
-Description: Search and download data from the API for Japanese Diet Proceedings at <https://kokkai.ndl.go.jp/api/meeting>.
+Description: Search and download data from the API for Japanese Diet Proceedings (see the reference at <https://kokkai.ndl.go.jp/api.html>).
 Imports: utils, dplyr, R.utils, jsonlite, tidyr
 URL: https://github.com/amatsuo/kaigiroku
 BugReports: https://github.com/amatsuo/kaigiroku/issues
