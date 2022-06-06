@@ -1,4 +1,4 @@
-# kaigiroku: an R client to access Kokkai Kaigiroku API
+# kaigiroku: Programmatic Access to the API for Japanese Diet Proceedings
 
 This package is to access the API of Kokkai Kaigiroku, conference
 minutes of Japanese National Diet. The API documentation is available
@@ -11,7 +11,13 @@ installation.
 
 ### Installation
 
-You can install a developer version by:
+You can isntall the package from CRAN:
+
+``` r
+install.packages("kaigiroku")
+```
+
+Alternativeky, you can install a developer version by:
 
 ``` r
 devtools::install_github("amatsuo/kaigiroku")
@@ -292,7 +298,7 @@ quanteda.textplots::textplot_wordcloud(
   color = RColorBrewer::brewer.pal(8,"Dark2"))
 ```
 
-![](README-unnamed-chunk-6-1.png)<!-- -->
+![](README-unnamed-chunk-7-1.png)<!-- -->
 
 ## Topicmodeling
 
@@ -321,17 +327,17 @@ require(topicmodels)
 model_lda_qt_speeches <- LDA(convert(data_dfm_qtspeech_sent, to = "topicmodels"), 
                              k = 6)
 get_terms(model_lda_qt_speeches, 10)
-#>       Topic 1  Topic 2    Topic 3  Topic 4    Topic 5 Topic 6 
-#>  [1,] "思い"   "君"       "実質"   "消費"     "言"    "憲法"  
-#>  [2,] "上げ"   "理事"     "平和"   "税"       "総理"  "議論"  
-#>  [3,] "申"     "大臣"     "名目"   "状況"     "思い"  "御"    
-#>  [4,] "平和"   "国務大臣" "自衛"   "増税"     "政策"  "草案"  
-#>  [5,] "主義"   "院"       "行使"   "〇"       "国会"  "改正"  
-#>  [6,] "貫"     "委員"     "聞"     "経済"     "出"    "党"    
-#>  [7,] "侵略"   "参議"     "主義"   "引き上げ" "財政"  "考え方"
-#>  [8,] "戦争"   "岡田"     "権"     "判断"     "日本"  "示し"  
-#>  [9,] "政権"   "衆議"     "〇"     "言"       "党首"  "思い"  
-#> [10,] "自民党" "片山"     "お答え" "デフレ"   "出動"  "総理"
+#>       Topic 1    Topic 2 Topic 3  Topic 4 Topic 5  Topic 6   
+#>  [1,] "消費"     "憲法"  "平和"   "上げ"  "名目"   "君"      
+#>  [2,] "税"       "議論"  "主義"   "申"    "実質"   "理事"    
+#>  [3,] "増税"     "改正"  "貫"     "思い"  "思い"   "大臣"    
+#>  [4,] "〇"       "草案"  "御"     "状況"  "〇"     "委員"    
+#>  [5,] "引き上げ" "自衛"  "思い"   "経済"  "デフレ" "国務大臣"
+#>  [6,] "判断"     "聞"    "岡田"   "総理"  "改革"   "院"      
+#>  [7,] "賃金"     "行使"  "侵略"   "言"    "財政"   "参議"    
+#>  [8,] "総理"     "示し"  "言"     "政権"  "例えば" "岡田"    
+#>  [9,] "景気"     "思う"  "考え方" "政策"  "方々"   "衆議"    
+#> [10,] "事実"     "権"    "党"     "認識"  "数字"   "委員長"
 # topics(model_lda_qt_speeches, 3)
 ```
 

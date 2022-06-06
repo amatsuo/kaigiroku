@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# kaigiroku: an R client to access Kokkai Kaigiroku API
+# kaigiroku: Programmatic Access to the API for Japanese Diet Proceedings
 
 This package is to access the API of Kokkai Kaigiroku, conference minutes of Japanese National Diet. The API documentation is available [here](http://kokkai.ndl.go.jp/api.html) (only in Japanese).
 
@@ -23,7 +23,14 @@ Nothing. You may need to download dependent packages during the installation.
 
 ### Installation
 
-You can install a developer version by:
+You can isntall the package from CRAN:
+
+```{r, eval = FALSE}
+install.packages("kaigiroku")
+```
+
+
+Alternativeky, you can install a developer version by:
 
 ```{r, eval=FALSE}
 devtools::install_github("amatsuo/kaigiroku")
