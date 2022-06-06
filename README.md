@@ -17,7 +17,7 @@ You can isntall the package from CRAN:
 install.packages("kaigiroku")
 ```
 
-Alternativeky, you can install a developer version by:
+Alternatively, you can install a developer version by:
 
 ``` r
 devtools::install_github("amatsuo/kaigiroku")
@@ -327,17 +327,17 @@ require(topicmodels)
 model_lda_qt_speeches <- LDA(convert(data_dfm_qtspeech_sent, to = "topicmodels"), 
                              k = 6)
 get_terms(model_lda_qt_speeches, 10)
-#>       Topic 1    Topic 2 Topic 3  Topic 4 Topic 5  Topic 6   
-#>  [1,] "消費"     "憲法"  "平和"   "上げ"  "名目"   "君"      
-#>  [2,] "税"       "議論"  "主義"   "申"    "実質"   "理事"    
-#>  [3,] "増税"     "改正"  "貫"     "思い"  "思い"   "大臣"    
-#>  [4,] "〇"       "草案"  "御"     "状況"  "〇"     "委員"    
-#>  [5,] "引き上げ" "自衛"  "思い"   "経済"  "デフレ" "国務大臣"
-#>  [6,] "判断"     "聞"    "岡田"   "総理"  "改革"   "院"      
-#>  [7,] "賃金"     "行使"  "侵略"   "言"    "財政"   "参議"    
-#>  [8,] "総理"     "示し"  "言"     "政権"  "例えば" "岡田"    
-#>  [9,] "景気"     "思う"  "考え方" "政策"  "方々"   "衆議"    
-#> [10,] "事実"     "権"    "党"     "認識"  "数字"   "委員長"
+#>       Topic 1    Topic 2 Topic 3 Topic 4  Topic 5    Topic 6
+#>  [1,] "君"       "憲法"  "議論"  "思い"   "上げ"     "消費" 
+#>  [2,] "理事"     "平和"  "消費"  "総理"   "申"       "〇"   
+#>  [3,] "大臣"     "主義"  "思"    "経済"   "思い"     "実質" 
+#>  [4,] "国務大臣" "草案"  "税"    "政策"   "御"       "税"   
+#>  [5,] "院"       "改正"  "党"    "認識"   "予算"     "名目" 
+#>  [6,] "委員"     "言"    "示し"  "財政"   "総理"     "増税" 
+#>  [7,] "岡田"     "貫"    "憲法"  "デフレ" "リー"     "賃金" 
+#>  [8,] "参議"     "自衛"  "責任"  "言"     "マン"     "国会" 
+#>  [9,] "片山"     "必要"  "考え"  "リスク" "ショック" "景気" 
+#> [10,] "委員長"   "行使"  "言"    "二十"   "政権"     "続"
 # topics(model_lda_qt_speeches, 3)
 ```
 

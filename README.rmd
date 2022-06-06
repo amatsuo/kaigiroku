@@ -30,7 +30,7 @@ install.packages("kaigiroku")
 ```
 
 
-Alternativeky, you can install a developer version by:
+Alternatively, you can install a developer version by:
 
 ```{r, eval=FALSE}
 devtools::install_github("amatsuo/kaigiroku")
