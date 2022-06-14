@@ -74,6 +74,42 @@ head(qt_speeches)
 #> #   pdfURL <chr>
 ```
 
+#### Getting meeting information without downloading speech contents
+
+Sometimes you may want to download meeting information, without getting
+the speech contents. You can get a list of meeting at specific period,
+by turning on `meeting_list` option.
+
+The intended use of this option is to get the list of all meetings. The
+main API does not allow skipping `nameOfMeeting` option (or you have to
+specify other option such as `speekerName`). If you want to get all
+speeches in a parliamentary session, there is no way to do that
+directly. You have to find the list of meeting names before hand, and
+this `meeting_list` option will do that.
+
+``` r
+# the following returns the list of meetings in Jauary 2020. Once you know the names of meetings you can use the names to download speech.
+get_meeting(house = "Lower", startDate = "2020-01-01", endDate = "2020-01-31", 
+            meeting_list = TRUE)
+#> 28 records found
+#> Fetching (current_record_position: 1)
+#> # A tibble: 28 × 11
+#>    issueID  imageKind searchObject session nameOfHouse nameOfMeeting issue date 
+#>    <chr>    <chr>            <int>   <int> <chr>       <chr>         <chr> <chr>
+#>  1 1201052… 会議録               0     201 衆議院      本会議        第4号 2020…
+#>  2 1201052… 会議録               0     201 衆議院      本会議        第3号 2020…
+#>  3 1201052… 会議録               0     201 衆議院      本会議        第2号 2020…
+#>  4 1201052… 会議録               0     201 衆議院      本会議        第1号 2020…
+#>  5 1201052… 会議録               0     201 衆議院      予算委員会    第4号 2020…
+#>  6 1201052… 会議録               0     201 衆議院      予算委員会    第3号 2020…
+#>  7 1201052… 会議録               0     201 衆議院      予算委員会    第2号 2020…
+#>  8 1201052… 会議録               0     201 衆議院      予算委員会    第1号 2020…
+#>  9 1200038… 会議録               0     200 衆議院      安全保障委員… 第9号 2020…
+#> 10 1201038… 会議録               0     201 衆議院      沖縄及び北方… 第1号 2020…
+#> # … with 18 more rows, and 3 more variables: closing <lgl>, meetingURL <chr>,
+#> #   pdfURL <chr>
+```
+
 ### After getting speeches
 
 Using the power of `quanteda` (and `stringi` for boundary split), you
@@ -290,7 +326,9 @@ topfeatures(data_dfm_qtspeech, n = 20) #looks better
 #>  117   54   43   41   40   39   34   31   31   28   27   24   24   24   24   22 
 #> 状況 経済 実質 改正 
 #>   21   19   19   19
+```
 
+``` r
 quanteda.textplots::textplot_wordcloud(
   data_dfm_qtspeech, min_count = 6, random_order = FALSE,
   rotation = .25, 
@@ -298,7 +336,7 @@ quanteda.textplots::textplot_wordcloud(
   color = RColorBrewer::brewer.pal(8,"Dark2"))
 ```
 
-![](README-unnamed-chunk-7-1.png)<!-- -->
+![](README-wordcloud-1.png)<!-- -->
 
 ## Topicmodeling
 
@@ -327,21 +365,21 @@ require(topicmodels)
 model_lda_qt_speeches <- LDA(convert(data_dfm_qtspeech_sent, to = "topicmodels"), 
                              k = 6)
 get_terms(model_lda_qt_speeches, 10)
-#>       Topic 1    Topic 2 Topic 3 Topic 4  Topic 5    Topic 6
-#>  [1,] "君"       "憲法"  "議論"  "思い"   "上げ"     "消費" 
-#>  [2,] "理事"     "平和"  "消費"  "総理"   "申"       "〇"   
-#>  [3,] "大臣"     "主義"  "思"    "経済"   "思い"     "実質" 
-#>  [4,] "国務大臣" "草案"  "税"    "政策"   "御"       "税"   
-#>  [5,] "院"       "改正"  "党"    "認識"   "予算"     "名目" 
-#>  [6,] "委員"     "言"    "示し"  "財政"   "総理"     "増税" 
-#>  [7,] "岡田"     "貫"    "憲法"  "デフレ" "リー"     "賃金" 
-#>  [8,] "参議"     "自衛"  "責任"  "言"     "マン"     "国会" 
-#>  [9,] "片山"     "必要"  "考え"  "リスク" "ショック" "景気" 
-#> [10,] "委員長"   "行使"  "言"    "二十"   "政権"     "続"
+#>       Topic 1  Topic 2  Topic 3 Topic 4  Topic 5    Topic 6
+#>  [1,] "消費"   "憲法"   "言"    "消費"   "君"       "党"   
+#>  [2,] "思い"   "議論"   "思い"  "実質"   "理事"     "総理" 
+#>  [3,] "上げ"   "草案"   "世界"  "〇"     "大臣"     "侵略" 
+#>  [4,] "聞"     "上げ"   "総理"  "税"     "国務大臣" "主義" 
+#>  [5,] "責任"   "改正"   "平和"  "増税"   "院"       "平和" 
+#>  [6,] "税"     "申"     "自衛"  "名目"   "委員"     "言う" 
+#>  [7,] "状況"   "御"     "権"    "判断"   "岡田"     "戦争" 
+#>  [8,] "政権"   "思い"   "必要"  "状況"   "参議"     "国会" 
+#>  [9,] "お答え" "平和"   "財政"  "デフレ" "衆議"     "改革" 
+#> [10,] "問題"   "考え方" "行使"  "続"     "委員長"   "社会"
 # topics(model_lda_qt_speeches, 3)
 ```
 
 ## Comments and feedback
 
 I welcome your comments and feedback. Please file issues on the issues
-page, and/or send me comments at <A.Matsuo@lse.ac.uk>.
+page, and/or send me comments at <matsuoakitaka@gmail.com>.

@@ -64,6 +64,19 @@ head(qt_speeches)
 
 ```
 
+#### Getting meeting information without downloading speech contents
+
+Sometimes you may want to download meeting information, without getting the speech contents. You can get a list of meeting at specific period, by turning on `meeting_list` option. 
+
+The intended use of this option is to get the list of all meetings. The main API does not allow skipping `nameOfMeeting` option (or you have to specify other option such as `speekerName`). If you want to get all speeches in a parliamentary session, there is no way to do that directly. You have to find the list of meeting names before hand, and this `meeting_list` option will do that. 
+
+```{r}
+# the following returns the list of meetings in Jauary 2020. Once you know the names of meetings you can use the names to download speech.
+get_meeting(house = "Lower", startDate = "2020-01-01", endDate = "2020-01-31", 
+            meeting_list = TRUE)
+```
+
+
 ### After getting speeches
 
 Using the power of `quanteda` (and `stringi` for boundary split), you can easily work with the texts and run analyses. 
@@ -128,7 +141,10 @@ data_dfm_qtspeech <- dfm_remove(data_dfm_qtspeech,
                                 valuetype = "regex")
 print(data_dfm_qtspeech)
 topfeatures(data_dfm_qtspeech, n = 20) #looks better
+```
 
+
+```{r wordcloud}
 quanteda.textplots::textplot_wordcloud(
   data_dfm_qtspeech, min_count = 6, random_order = FALSE,
   rotation = .25, 
@@ -167,4 +183,4 @@ get_terms(model_lda_qt_speeches, 10)
 
 ## Comments and feedback
 
-I welcome your comments and feedback.  Please file issues on the issues page, and/or send me comments at A.Matsuo@lse.ac.uk.
+I welcome your comments and feedback.  Please file issues on the issues page, and/or send me comments at matsuoakitaka@gmail.com.
